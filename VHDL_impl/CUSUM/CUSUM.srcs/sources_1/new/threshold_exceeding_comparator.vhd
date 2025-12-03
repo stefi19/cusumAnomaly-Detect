@@ -14,18 +14,23 @@ entity threshold_exceeding_comparator is
     s_axis_threshold_tdata : IN STD_LOGIC_VECTOR(31 DOWNTO 0);
     m_axis_result_tvalid : OUT STD_LOGIC;
     m_axis_result_tready : IN STD_LOGIC;
-    m_axis_result_tdata : OUT STD_LOGIC_VECTOR(31 DOWNTO 0)
+    m_axis_result_tdata : OUT STD_LOGICș
+    m_axis_gplus_tvalid  : OUT STD_LOGIC;
+    m_axis_gplus_tready  : IN  STD_LOGIC;
+    m_axis_gplus_tdata   : OUT STD_LOGIC_VECTOR(31 DOWNTO 0);
+    m_axis_gminus_tvalid : OUT STD_LOGIC;
+    m_axis_gminus_tready : IN  STD_LOGIC;
+    m_axis_gminus_tdata  : OUT STD_LOGIC_VECTOR(31 DOWNTO 0)
   );
 end threshold_exceeding_comparator;
---change min in b
---eliminate max, now threshold
+
 architecture Behavioral of threshold_exceeding_comparator is
 
 type state_type is (S_READ, S_WRITE);
 signal state : state_type := S_READ;
 
 signal res_valid : STD_LOGIC := '0';
-signal result : STD_LOGIC_VECTOR (31 downto 0) := (others => '0');
+signal flag_reg : STD_LOGIC := '0';
 
 signal a_ready, b_ready, max_ready : STD_LOGIC := '0';
 signal internal_ready, external_ready, inputs_valid : STD_LOGIC := '0';
@@ -39,7 +44,13 @@ begin
     external_ready <= internal_ready and inputs_valid;
     
     m_axis_result_tvalid <= '1' when state = S_WRITE else '0';
-    m_axis_result_tdata <= result;
+    m_axis_result_tdata <= flag_reg;
+
+    m_axis_gplus_tvalid  <= '1' when state = S_WRITE else '0';
+    m_axis_gplus_tdata   <= s_axis_a_tdata when state = S_WRITE else (others => '0');
+
+    m_axis_gminus_tvalid <= '1' when state = S_WRITE else '0';
+    m_axis_gminus_tdata  <= s_axis_b_tdata when state = S_WRITE else (others => '0');
     
     process(aclk)
     begin
@@ -47,19 +58,19 @@ begin
             case state is
                 when S_READ =>
                     if external_ready = '1' and inputs_valid = '1' then
---                        if s_axis_a_tdata < s_axis_b_tdata then
---                            result <= s_axis_min_tdata;
---                        elsif s_axis_a_tdata > s_axis_max_tdata then
-                            result <= s_axis_a_tdata;
+                        -- Compare a and b against threshold. If either exceeds, set flag and clear flag_reg accordingly.
+                        if (s_axis_a_tdata > s_axis_threshold_tdata) or (s_axis_b_tdata > s_axis_threshold_tdata) then
+                            flag_reg <= '1';
                         else
-                            result <= s_axis_a_tdata;
+                            -- no exceed - clear flag
+                            flag_reg <= '0';
                         end if;
                         
                         state <= S_WRITE;
                     end if;    
                 
                 when S_WRITE =>
-                    if m_axis_result_tready = '1' then
+                    if (m_axis_result_tready = '1') and (m_axis_gplus_tready = '1') and (m_axis_gminus_tready = '1') then
                         state <= S_READ;
                     end if;
             end case;
