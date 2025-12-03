@@ -115,7 +115,6 @@ int main(int argc, char** argv) {
 
     // Keep a summary of anomaly counts per sensor
     vector<pair<string,int>> anomalySummary;
-
     for(const auto& sname : sensorNames){
         // sanitize sensor name like splitSensors
         string sensorFileName = sname;
@@ -127,7 +126,7 @@ int main(int argc, char** argv) {
             continue;
         }
         vector<dataStream> series = loadSeries(inPath);
-    vector<dataStream> anomalies = cusumAlg(series, THRESHOLD, DRIFT);
+        vector<dataStream> anomalies = cusumAlg(series, THRESHOLD, DRIFT);
 
         string rezPath = string("output/") + sensorFileName + "_rez_soft.csv";
         ofstream out(rezPath);

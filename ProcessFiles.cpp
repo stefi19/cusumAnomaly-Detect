@@ -43,8 +43,7 @@ void splitSensors(const string& inputCsv, int fileCount) {
         cerr << "Could not open input CSV\n";
         return;
     }
-
-    // Small helper to trim whitespace from CSV header tokens.
+    // helper to trim whitespace from CSV header tokens.
     auto trim = [](const string &s)->string{
         size_t a = s.find_first_not_of(" \t\n\r");
         if (a == string::npos) return string();
@@ -68,12 +67,11 @@ void splitSensors(const string& inputCsv, int fileCount) {
         cerr << "Could not create output directory: " << outDir << "\n";
         return;
     }
-
     // Prepare 1 file per sensor in output/
     vector<unique_ptr<ofstream>> outs(sensorCount);
     vector<int> counters(sensorCount, 0);
     for(int i = 0; i < sensorCount; i++){
-        // Use the header token as filename, after trimming and sanitization.
+        // Use the header token as filename, after trimming
         string sensorName = cols[i + 1];
         // sanitize sensorName to be a filename: replace spaces and slashes
         replace(sensorName.begin(), sensorName.end(), ' ', '_');
@@ -101,9 +99,6 @@ void splitSensors(const string& inputCsv, int fileCount) {
         }
     }
 }
-
-// NOTE: raw .bin writers were removed — we now keep only the text CSV
-// representation of binary values (`<sensor>_binary.csv`).
 
 // Create per-sensor CSV files containing the binary (bitstring) representation
 // of each integer value found in `outDir/<sensor>.csv`.
@@ -134,7 +129,6 @@ void writeBinaryCsvPerSensor(const string &masterCsv, const string &outDir = str
         cerr << "Master CSV header does not contain sensor columns\n";
         return;
     }
-
     for(size_t i = 1; i < cols.size(); ++i){
         string sensorName = cols[i];
         replace(sensorName.begin(), sensorName.end(), ' ', '_');
@@ -145,7 +139,6 @@ void writeBinaryCsvPerSensor(const string &masterCsv, const string &outDir = str
             cerr << "Could not open preprocessed sensor CSV: " << csvPath << "\n";
             continue;
         }
-
         string outCsv = outDir + "/" + sensorName + "_binary.csv";
         ofstream oOut(outCsv);
         if(!oOut.is_open()){
@@ -153,7 +146,6 @@ void writeBinaryCsvPerSensor(const string &masterCsv, const string &outDir = str
             sIn.close();
             continue;
         }
-
         // write header
         oOut << "id,binary_value\n";
         string line;
@@ -168,12 +160,10 @@ void writeBinaryCsvPerSensor(const string &masterCsv, const string &outDir = str
             try {
                 v = static_cast<int32_t>(stoi(trim(valStr)));
             } catch(...) { continue; }
-
             // Convert to 32-bit two's complement binary string
             std::bitset<32> bits(static_cast<uint32_t>(v));
             oOut << idStr << "," << bits.to_string() << "\n";
         }
-
         sIn.close();
         oOut.close();
         cout << "Wrote binary-CSV file: " << outCsv << "\n";
