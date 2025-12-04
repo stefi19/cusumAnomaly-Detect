@@ -14,7 +14,7 @@ entity threshold_exceeding_comparator is
     s_axis_threshold_tdata : IN STD_LOGIC_VECTOR(31 DOWNTO 0);
     m_axis_result_tvalid : OUT STD_LOGIC;
     m_axis_result_tready : IN STD_LOGIC;
-    m_axis_result_tdata : OUT STD_LOGICș
+    m_axis_result_tdata : OUT STD_LOGIC;
     m_axis_gplus_tvalid  : OUT STD_LOGIC;
     m_axis_gplus_tready  : IN  STD_LOGIC;
     m_axis_gplus_tdata   : OUT STD_LOGIC_VECTOR(31 DOWNTO 0);

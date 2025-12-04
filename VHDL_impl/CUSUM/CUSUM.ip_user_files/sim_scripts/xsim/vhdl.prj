@@ -1,0 +1,9 @@
+vhdl xpm  \
+"D:/Vivado/Vivado/2024.2/data/ip/xpm/xpm_VCOMP.vhd" \
+
+vhdl xil_defaultlib  \
+"../../../../adder.vhd" \
+"../../../../adder_tb.vhd" \
+
+# Do not sort compile order
+nosort

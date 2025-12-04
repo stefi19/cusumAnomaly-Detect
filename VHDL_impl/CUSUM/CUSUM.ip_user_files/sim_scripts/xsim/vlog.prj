@@ -1,0 +1,9 @@
+sv xpm --include "../../../CUSUM.gen/sources_1/ip/axis_data_fifo_0/hdl" \
+"D:/Vivado/Vivado/2024.2/data/ip/xpm/xpm_cdc/hdl/xpm_cdc.sv" \
+"D:/Vivado/Vivado/2024.2/data/ip/xpm/xpm_fifo/hdl/xpm_fifo.sv" \
+"D:/Vivado/Vivado/2024.2/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv" \
+
+verilog xil_defaultlib "glbl.v"
+
+# Do not sort compile order
+nosort

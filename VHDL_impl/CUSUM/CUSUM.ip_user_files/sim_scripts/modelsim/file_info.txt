@@ -1,0 +1,7 @@
+xpm_cdc.sv,systemverilog,xpm,D:/Vivado/Vivado/2024.2/data/ip/xpm/xpm_cdc/hdl/xpm_cdc.sv,incdir="../../../CUSUM.gen/sources_1/ip/axis_data_fifo_0/hdl"
+xpm_fifo.sv,systemverilog,xpm,D:/Vivado/Vivado/2024.2/data/ip/xpm/xpm_fifo/hdl/xpm_fifo.sv,incdir="../../../CUSUM.gen/sources_1/ip/axis_data_fifo_0/hdl"
+xpm_memory.sv,systemverilog,xpm,D:/Vivado/Vivado/2024.2/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv,incdir="../../../CUSUM.gen/sources_1/ip/axis_data_fifo_0/hdl"
+xpm_VCOMP.vhd,vhdl,xpm,D:/Vivado/Vivado/2024.2/data/ip/xpm/xpm_VCOMP.vhd,incdir="../../../CUSUM.gen/sources_1/ip/axis_data_fifo_0/hdl"
+adder.vhd,vhdl,xil_defaultlib,D:/Facultate/Year3/Sem1/SCS/Assignament 5/cusumAnomaly-Detect/VHDL_impl/adder.vhd,incdir="../../../CUSUM.gen/sources_1/ip/axis_data_fifo_0/hdl"
+adder_tb.vhd,vhdl,xil_defaultlib,D:/Facultate/Year3/Sem1/SCS/Assignament 5/cusumAnomaly-Detect/VHDL_impl/adder_tb.vhd,incdir="../../../CUSUM.gen/sources_1/ip/axis_data_fifo_0/hdl"
+glbl.v,Verilog,xil_defaultlib,glbl.v
