@@ -1,69 +1,92 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
-use IEEE.STD_LOGIC_SIGNED.ALL;
+use IEEE.NUMERIC_STD.ALL;
 
 entity broadcaster is
   Port (
-    aclk : IN STD_LOGIC;
-    s_axis_tvalid : IN STD_LOGIC;
-    s_axis_tready : OUT STD_LOGIC;
-    s_axis_tdata : IN STD_LOGIC_VECTOR(31 DOWNTO 0);
-    m_axis_a1_tvalid : OUT STD_LOGIC;
-    m_axis_a1_tready : IN STD_LOGIC;
-    m_axis_a1_tdata : OUT STD_LOGIC_VECTOR(31 DOWNTO 0);
-    m_axis_a2_tvalid : OUT STD_LOGIC;
-    m_axis_a2_tready : IN STD_LOGIC;
-    m_axis_a2_tdata : OUT STD_LOGIC_VECTOR(31 DOWNTO 0)
+    aclk             : in  std_logic;
+
+    s_axis_tvalid    : in  std_logic;
+    s_axis_tready    : out std_logic;
+    s_axis_tdata     : in  std_logic_vector(31 downto 0);
+
+    m_axis_a1_tvalid : out std_logic;
+    m_axis_a1_tready : in  std_logic;
+    m_axis_a1_tdata  : out std_logic_vector(31 downto 0);
+
+    m_axis_a2_tvalid : out std_logic;
+    m_axis_a2_tready : in  std_logic;
+    m_axis_a2_tdata  : out std_logic_vector(31 downto 0)
   );
 end broadcaster;
 
 architecture Behavioral of broadcaster is
+  type state_type is (S_READ, S_WAIT_CONSUME);
+  signal s : state_type := S_READ;
 
-    type state_type is (S_READ, S_WRITE);
-    signal state : state_type := S_READ;
+  -- ✅ semnal intern care ține datele broadcastate
+  signal data_reg : std_logic_vector(31 downto 0) := (others => '0');
 
-    signal buffer_a : STD_LOGIC_VECTOR (31 downto 0) := (others => '0');
-    signal internal_ready, external_ready, inputs_valid : STD_LOGIC := '0';
-    signal a1_done, a2_done : STD_LOGIC := '0';
+  -- ✅ handshake intern ready acceptabil pentru citire internă
+  signal axis_accept_int : std_logic := '0';
 
+  -- ✅ valid intern: ridicat când avem date de livrat, resetat când sunt consumate
+  signal out_valid_int : std_logic := '0';
+  signal a1_done_int  : std_logic := '0';
+  signal a2_done_int  : std_logic := '0';
 begin
-    s_axis_tready <= external_ready;
+  ---------------------------------------------------------------------------
+  -- READY inbound: acceptăm DOAR în S_READ state
+  ---------------------------------------------------------------------------
+  axis_accept_int <= '1' when s = S_READ else '0';
+  s_axis_tready   <= axis_accept_int;
 
-    internal_ready <= '1' when state = S_READ else '0';
-    inputs_valid <= s_axis_tvalid;
-    external_ready <= internal_ready and inputs_valid;
+  -- ridicăm valid intern doar când intrăm în broadcast stage
+  m_axis_a1_tvalid <= out_valid_int when a1_done_int = '0' else '0';
+  m_axis_a2_tvalid <= out_valid_int when a2_done_int = '0' else '0';
 
-    m_axis_a1_tvalid <= '1' when state = S_WRITE and a1_done = '0' else '0';
-    m_axis_a1_tdata <= buffer_a;
+  ---------------------------------------------------------------------------
+  -- Broadcast data: porturile doar reflectă intern reg
+  ---------------------------------------------------------------------------
+  m_axis_a1_tdata <= data_reg;
+  m_axis_a2_tdata <= data_reg;
 
-    m_axis_a2_tvalid <= '1' when state = S_WRITE and a2_done = '0' else '0';
-    m_axis_a2_tdata <= buffer_a;
+  ---------------------------------------------------------------------------
+  -- STATE MACHINE
+  ---------------------------------------------------------------------------
+  process(aclk)
+  begin
+    if rising_edge(aclk) then
+      case s is
 
-    process(aclk)
-    begin
-        if rising_edge(aclk) then
-            case state is
-                when S_READ =>
-                    if external_ready = '1' and inputs_valid = '1' then
-                        buffer_a <= s_axis_tdata;
-                        a1_done <= '0';
-                        a2_done <= '0';
-                        state <= S_WRITE;
-                    end if;
+        when S_READ =>
+          if s_axis_tvalid = '1' and axis_accept_int = '1' then
+            data_reg <= s_axis_tdata;
+            out_valid_int <= '1';  -- start broadcast (intern)
+            a1_done_int  <= '0';
+            a1_done_int  <= '0';
+            s <= S_WAIT_CONSUME;
+          end if;
 
-                when S_WRITE =>
-                    if m_axis_a1_tvalid = '1' and m_axis_a1_tready = '1' then
-                        a1_done <= '1';
-                    end if;
-                    if m_axis_a2_tvalid = '1' and m_axis_a2_tready = '1' then
-                        a2_done <= '1';
-                    end if;
+        when S_WAIT_CONSUME =>
+          -- nu citim din porturile OUT, ci doar feedback-ul extern ready
+          if out_valid_int = '1' then
+            if m_axis_a1_tready = '1' and a1_done_int = '0' then
+              a1_done_int <= '1';
+            end if;
+            if m_axis_a2_tready = '1' and a2_done_int = '0' then
+              a2_done_int <= '1';
+            end if;
+          end if;
 
-                    if a1_done = '1' and a2_done = '1' then
-                        state <= S_READ;
-                    end if;
-            end case;
-        end if;
-    end process;
+          -- când ambele outputs au consumat intern broadcast valid -> revenim la read
+          if a1_done_int = '1' and a2_done_int = '1' then
+            out_valid_int <= '0';      -- oprim broadcast stage (intern)
+            s <= S_READ;
+          end if;
+
+      end case;
+    end if;
+  end process;
 
 end Behavioral;

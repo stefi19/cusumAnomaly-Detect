@@ -1,0 +1,12 @@
+# compile vhdl design source files
+vhdl xil_defaultlib  \
+"../../../../../adder.vhd" \
+"../../../../CUSUM.srcs/sources_1/new/broadcaster.vhd" \
+"../../../../CUSUM.srcs/sources_1/new/cusum_top.vhd" \
+"../../../../CUSUM.srcs/sources_1/new/maximum.vhd" \
+"../../../../../subtractor.vhd" \
+"../../../../CUSUM.srcs/sources_1/new/threshold_exceeding_comparator.vhd" \
+"../../../../CUSUM.srcs/sources_1/new/cusum_top_tb.vhd" \
+
+# Do not sort compile order
+nosort

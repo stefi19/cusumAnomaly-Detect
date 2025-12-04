@@ -338,19 +338,45 @@ begin
         m_axis_tdata   => FIFO5_out
       );
 
-  -- MUX1 / MUX2 (AXI-aware selectors): choose between zero and FIFO10/FIFO11 feedback based on `sel`.
-  -- When sel = '1' select feedback (FIFO10/FIFO11). When sel = '0' select constant-zero.
-  -- Output valid follows the selected source; when selecting zero the stream is always valid.
-  -- When sel='1' only forward FIFO data if FIFO reports valid; otherwise output zero.
-  -- MUX forwards feedback only after feedback_seen is set (i.e. FIFOs produced feedback once).
-  MUX1_out <= FIFO10_out when (sel = '1' and feedback_seen = '1' and FIFO10_data_valid = '1') else (others => '0');
-  MUX1_valid <= (sel = '1' and feedback_seen = '1' and FIFO10_data_valid = '1') or (sel = '0');
-  -- drive FIFO10 ready only when feedback is enabled so back-pressure flows into FIFO10 only when selected
-  FIFO10_data_ready <= MUX1_ready when (sel = '1' and feedback_seen = '1') else '0';
+--  -- MUX1 / MUX2 (AXI-aware selectors): choose between zero and FIFO10/FIFO11 feedback based on `sel`.
+--  -- When sel = '1' select feedback (FIFO10/FIFO11). When sel = '0' select constant-zero.
+--  -- Output valid follows the selected source; when selecting zero the stream is always valid.
+--  -- When sel='1' only forward FIFO data if FIFO reports valid; otherwise output zero.
+--  -- MUX forwards feedback only after feedback_seen is set (i.e. FIFOs produced feedback once).
+--  MUX1_out <= FIFO10_out when (sel = '1' and feedback_seen = '1' and FIFO10_data_valid = '1') else (others => '0');
+--  MUX1_valid <= (sel = '1' and feedback_seen = '1' and FIFO10_data_valid = '1') or (sel = '0');
+--  -- drive FIFO10 ready only when feedback is enabled so back-pressure flows into FIFO10 only when selected
+--  FIFO10_data_ready <= MUX1_ready when (sel = '1' and feedback_seen = '1') else '0';
 
-  MUX2_out <= FIFO11_out when (sel = '1' and feedback_seen = '1' and FIFO11_data_valid = '1') else (others => '0');
-  MUX2_valid <= (sel = '1' and feedback_seen = '1' and FIFO11_data_valid = '1') or (sel = '0');
-  FIFO11_data_ready <= MUX2_ready when (sel = '1' and feedback_seen = '1') else '0';
+--  MUX2_out <= FIFO11_out when (sel = '1' and feedback_seen = '1' and FIFO11_data_valid = '1') else (others => '0');
+--  MUX2_valid <= (sel = '1' and feedback_seen = '1' and FIFO11_data_valid = '1') or (sel = '0');
+--  FIFO11_data_ready <= MUX2_ready when (sel = '1' and feedback_seen = '1') else '0';
+-- MUX1 valid (boolean condition converted explicitly to std_logic)
+MUX1_valid <= '1' when (sel = '1' and feedback_seen = '1' and FIFO10_data_valid = '1')
+             else '0';
+
+-- MUX1 data path stays unchanged
+MUX1_out <= FIFO10_out when (sel = '1' and feedback_seen = '1' and FIFO10_data_valid = '1')
+           else (others => '0');
+
+-- drive FIFO10 ready only when selected, and convert boolean → std_logic
+FIFO10_data_ready <= '1' when (sel = '1' and feedback_seen = '1')
+                    else '0';
+
+------------------------------------------------------------------
+
+-- MUX2 valid (boolean → std_logic)
+MUX2_valid <= '1' when (sel = '1' and feedback_seen = '1' and FIFO11_data_valid = '1')
+             else '0';
+
+-- MUX2 data path
+MUX2_out <= FIFO11_out when (sel = '1' and feedback_seen = '1' and FIFO11_data_valid = '1')
+           else (others => '0');
+
+-- drive FIFO11 ready when selected
+FIFO11_data_ready <= '1' when (sel = '1' and feedback_seen = '1')
+                    else '0';
+
 
   -- Latch that remembers when any feedback FIFO produced data. Once set it remains set
   -- for subsequent iterations (so only the very first iteration emits zeros).

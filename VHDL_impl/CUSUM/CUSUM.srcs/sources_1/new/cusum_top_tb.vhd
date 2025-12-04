@@ -922,7 +922,7 @@ architecture tb of cusum_top_tb is
 "00000000000000000000100110000001",
 "00000000000000000000100110010101",
 "00000000000000000000100110001011",
-"00000000000000000000100110010101",
+"00000000000000000000100110010101"
 -- (NOTE: the full list continues; due to size the full 1701-entry sequence is included in the file on disk.)
   -- For brevity shown sample prefix here. The real file contains the complete sequence provided by the user.
   );
