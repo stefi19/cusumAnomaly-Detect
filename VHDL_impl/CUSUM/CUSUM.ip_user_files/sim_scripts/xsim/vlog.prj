@@ -1,7 +1,16 @@
-sv xpm --include "../../../CUSUM.gen/sources_1/ip/axis_data_fifo_0/hdl" \
+sv xpm --include "../../ipstatic/hdl" \
 "D:/Vivado/Vivado/2024.2/data/ip/xpm/xpm_cdc/hdl/xpm_cdc.sv" \
 "D:/Vivado/Vivado/2024.2/data/ip/xpm/xpm_fifo/hdl/xpm_fifo.sv" \
 "D:/Vivado/Vivado/2024.2/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv" \
+
+verilog axis_infrastructure_v1_1_1 --include "../../ipstatic/hdl" \
+"../../ipstatic/hdl/axis_infrastructure_v1_1_vl_rfs.v" \
+
+verilog axis_data_fifo_v2_0_15 --include "../../ipstatic/hdl" \
+"../../ipstatic/hdl/axis_data_fifo_v2_0_vl_rfs.v" \
+
+verilog xil_defaultlib --include "../../ipstatic/hdl" \
+"../../../CUSUM.gen/sources_1/ip/axis_data_fifo_0/sim/axis_data_fifo_0.v" \
 
 verilog xil_defaultlib "glbl.v"
 

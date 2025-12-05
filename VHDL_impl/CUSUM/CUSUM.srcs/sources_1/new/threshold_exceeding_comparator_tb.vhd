@@ -1,6 +1,6 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
-use IEEE.STD_LOGIC_SIGNED.ALL;
+use IEEE.NUMERIC_STD.ALL;
 
 entity threshold_exceeding_comparator_tb is
 end threshold_exceeding_comparator_tb;
@@ -35,7 +35,7 @@ architecture Behavioral of threshold_exceeding_comparator_tb is
 begin
 
   -- instantiate DUT
-  dut: entity work.threshold_exceeding_comparator(Behavioral)
+  DUT: entity work.threshold_exceeding_comparator
     port map(
       aclk => clk,
       s_axis_a_tvalid => s_axis_a_tvalid,
@@ -45,14 +45,14 @@ begin
       s_axis_b_tready => s_axis_b_tready,
       s_axis_b_tdata  => s_axis_b_tdata,
       s_axis_threshold_tdata => s_axis_threshold_tdata,
-      m_axis_result_tvalid => m_axis_result_tvalid,
-      m_axis_result_tready => m_axis_result_tready,
       m_axis_gplus_tvalid  => m_axis_gplus_tvalid,
       m_axis_gplus_tready  => m_axis_gplus_tready,
       m_axis_gplus_tdata   => m_axis_gplus_tdata,
       m_axis_gminus_tvalid => m_axis_gminus_tvalid,
       m_axis_gminus_tready => m_axis_gminus_tready,
       m_axis_gminus_tdata  => m_axis_gminus_tdata,
+      m_axis_result_tvalid => m_axis_result_tvalid,
+      m_axis_result_tready => m_axis_result_tready,
       m_axis_result_tdata  => m_axis_result_tdata
     );
 

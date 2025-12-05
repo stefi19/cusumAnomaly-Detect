@@ -1,0 +1,1027 @@
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2024 Advanced Micro Devices, Inc. All Rights Reserved.
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2024.2 (win64) Build 5239630 Fri Nov 08 22:35:27 MST 2024
+| Date         : Fri Dec  5 10:29:11 2025
+| Host         : Stefi running 64-bit major release  (build 9200)
+| Command      : report_timing_summary -max_paths 10 -report_unconstrained -file cusum_top_timing_summary_routed.rpt -pb cusum_top_timing_summary_routed.pb -rpx cusum_top_timing_summary_routed.rpx -warn_on_violation
+| Design       : cusum_top
+| Device       : 7a35t-cpg236
+| Speed File   : -1  PRODUCTION 1.23 2018-06-13
+| Design State : Routed
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Timing Summary Report
+
+------------------------------------------------------------------------------------------------
+| Timer Settings
+| --------------
+------------------------------------------------------------------------------------------------
+
+  Enable Multi Corner Analysis               :  Yes
+  Enable Pessimism Removal                   :  Yes
+  Pessimism Removal Resolution               :  Nearest Common Node
+  Enable Input Delay Default Clock           :  No
+  Enable Preset / Clear Arcs                 :  No
+  Disable Flight Delays                      :  No
+  Ignore I/O Paths                           :  No
+  Timing Early Launch at Borrowing Latches   :  No
+  Borrow Time for Max Delay Exceptions       :  Yes
+  Merge Timing Exceptions                    :  Yes
+  Inter-SLR Compensation                     :  Conservative
+
+  Corner  Analyze    Analyze    
+  Name    Max Paths  Min Paths  
+  ------  ---------  ---------  
+  Slow    Yes        Yes        
+  Fast    Yes        Yes        
+
+
+------------------------------------------------------------------------------------------------
+| Report Methodology
+| ------------------
+------------------------------------------------------------------------------------------------
+
+Rule       Severity          Description                  Violations  
+---------  ----------------  ---------------------------  ----------  
+TIMING-17  Critical Warning  Non-clocked sequential cell  662         
+
+Note: This report is based on the most recent report_methodology run and may not be up-to-date. Run report_methodology on the current design for the latest report.
+
+
+
+check_timing report
+
+Table of Contents
+-----------------
+1. checking no_clock (662)
+2. checking constant_clock (0)
+3. checking pulse_width_clock (0)
+4. checking unconstrained_internal_endpoints (1632)
+5. checking no_input_delay (68)
+6. checking no_output_delay (4)
+7. checking multiple_clock (0)
+8. checking generated_clocks (0)
+9. checking loops (0)
+10. checking partial_input_delay (0)
+11. checking partial_output_delay (0)
+12. checking latch_loops (0)
+
+1. checking no_clock (662)
+--------------------------
+ There are 662 register/latch pins with no clock driven by root clock pin: aclk (HIGH)
+
+
+2. checking constant_clock (0)
+------------------------------
+ There are 0 register/latch pins with constant_clock.
+
+
+3. checking pulse_width_clock (0)
+---------------------------------
+ There are 0 register/latch pins which need pulse_width check
+
+
+4. checking unconstrained_internal_endpoints (1632)
+---------------------------------------------------
+ There are 1632 pins that are not constrained for maximum delay. (HIGH)
+
+ There are 0 pins that are not constrained for maximum delay due to constant clock.
+
+
+5. checking no_input_delay (68)
+-------------------------------
+ There are 68 input ports with no input delay specified. (HIGH)
+
+ There are 0 input ports with no input delay but user has a false path constraint.
+
+
+6. checking no_output_delay (4)
+-------------------------------
+ There are 4 ports with no output delay specified. (HIGH)
+
+ There are 0 ports with no output delay but user has a false path constraint
+
+ There are 0 ports with no output delay but with a timing clock defined on it or propagating through it
+
+
+7. checking multiple_clock (0)
+------------------------------
+ There are 0 register/latch pins with multiple clocks.
+
+
+8. checking generated_clocks (0)
+--------------------------------
+ There are 0 generated clocks that are not connected to a clock source.
+
+
+9. checking loops (0)
+---------------------
+ There are 0 combinational loops in the design.
+
+
+10. checking partial_input_delay (0)
+------------------------------------
+ There are 0 input ports with partial input delay specified.
+
+
+11. checking partial_output_delay (0)
+-------------------------------------
+ There are 0 ports with partial output delay specified.
+
+
+12. checking latch_loops (0)
+----------------------------
+ There are 0 combinational latch loops in the design through latch input
+
+
+
+------------------------------------------------------------------------------------------------
+| Design Timing Summary
+| ---------------------
+------------------------------------------------------------------------------------------------
+
+    WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints      WHS(ns)      THS(ns)  THS Failing Endpoints  THS Total Endpoints     WPWS(ns)     TPWS(ns)  TPWS Failing Endpoints  TPWS Total Endpoints  
+    -------      -------  ---------------------  -------------------      -------      -------  ---------------------  -------------------     --------     --------  ----------------------  --------------------  
+        inf        0.000                      0                 1647          inf        0.000                      0                 1647           NA           NA                      NA                    NA  
+
+
+All user specified timing constraints are met.
+
+
+------------------------------------------------------------------------------------------------
+| Clock Summary
+| -------------
+------------------------------------------------------------------------------------------------
+
+
+------------------------------------------------------------------------------------------------
+| Intra Clock Table
+| -----------------
+------------------------------------------------------------------------------------------------
+
+Clock             WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints      WHS(ns)      THS(ns)  THS Failing Endpoints  THS Total Endpoints     WPWS(ns)     TPWS(ns)  TPWS Failing Endpoints  TPWS Total Endpoints  
+-----             -------      -------  ---------------------  -------------------      -------      -------  ---------------------  -------------------     --------     --------  ----------------------  --------------------  
+
+
+------------------------------------------------------------------------------------------------
+| Inter Clock Table
+| -----------------
+------------------------------------------------------------------------------------------------
+
+From Clock    To Clock          WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints      WHS(ns)      THS(ns)  THS Failing Endpoints  THS Total Endpoints  
+----------    --------          -------      -------  ---------------------  -------------------      -------      -------  ---------------------  -------------------  
+
+
+------------------------------------------------------------------------------------------------
+| Other Path Groups Table
+| -----------------------
+------------------------------------------------------------------------------------------------
+
+Path Group    From Clock    To Clock          WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints      WHS(ns)      THS(ns)  THS Failing Endpoints  THS Total Endpoints  
+----------    ----------    --------          -------      -------  ---------------------  -------------------      -------      -------  ---------------------  -------------------  
+
+
+------------------------------------------------------------------------------------------------
+| User Ignored Path Table
+| -----------------------
+------------------------------------------------------------------------------------------------
+
+Path Group    From Clock    To Clock    
+----------    ----------    --------    
+(none)                                    
+
+
+------------------------------------------------------------------------------------------------
+| Unconstrained Path Table
+| ------------------------
+------------------------------------------------------------------------------------------------
+
+Path Group    From Clock    To Clock    
+----------    ----------    --------    
+(none)                                    
+
+
+------------------------------------------------------------------------------------------------
+| Timing Details
+| --------------
+------------------------------------------------------------------------------------------------
+
+
+--------------------------------------------------------------------------------------
+Path Group:  (none)
+From Clock:  
+  To Clock:  
+
+Max Delay            11 Endpoints
+Min Delay            11 Endpoints
+--------------------------------------------------------------------------------------
+
+
+Max Delay Paths
+--------------------------------------------------------------------------------------
+Slack:                    inf
+  Source:                 reset
+                            (input port)
+  Destination:            FIFO7_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[0]/D
+  Path Group:             (none)
+  Path Type:              Max at Slow Process Corner
+  Data Path Delay:        5.719ns  (logic 0.940ns (16.438%)  route 4.779ns (83.562%))
+  Logic Levels:           1  (IBUF=1)
+  Timing Exception:       False Path
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+    K19                                               0.000     0.000 r  reset (IN)
+                         net (fo=0)                   0.000     0.000    reset
+    K19                  IBUF (Prop_ibuf_I_O)         0.940     0.940 r  reset_IBUF_inst/O
+                         net (fo=14, routed)          4.779     5.719    FIFO7_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/src_rst
+    SLICE_X53Y19         FDRE                                         r  FIFO7_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[0]/D
+  -------------------------------------------------------------------    -------------------
+
+Slack:                    inf
+  Source:                 reset
+                            (input port)
+  Destination:            FIFO6_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[0]/D
+  Path Group:             (none)
+  Path Type:              Max at Slow Process Corner
+  Data Path Delay:        5.480ns  (logic 0.940ns (17.155%)  route 4.540ns (82.845%))
+  Logic Levels:           1  (IBUF=1)
+  Timing Exception:       False Path
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+    K19                                               0.000     0.000 r  reset (IN)
+                         net (fo=0)                   0.000     0.000    reset
+    K19                  IBUF (Prop_ibuf_I_O)         0.940     0.940 r  reset_IBUF_inst/O
+                         net (fo=14, routed)          4.540     5.480    FIFO6_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/src_rst
+    SLICE_X53Y27         FDRE                                         r  FIFO6_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[0]/D
+  -------------------------------------------------------------------    -------------------
+
+Slack:                    inf
+  Source:                 reset
+                            (input port)
+  Destination:            FIFO4_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[0]/D
+  Path Group:             (none)
+  Path Type:              Max at Slow Process Corner
+  Data Path Delay:        5.453ns  (logic 0.940ns (17.240%)  route 4.513ns (82.760%))
+  Logic Levels:           1  (IBUF=1)
+  Timing Exception:       False Path
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+    K19                                               0.000     0.000 r  reset (IN)
+                         net (fo=0)                   0.000     0.000    reset
+    K19                  IBUF (Prop_ibuf_I_O)         0.940     0.940 r  reset_IBUF_inst/O
+                         net (fo=14, routed)          4.513     5.453    FIFO4_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/src_rst
+    SLICE_X52Y21         FDRE                                         r  FIFO4_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[0]/D
+  -------------------------------------------------------------------    -------------------
+
+Slack:                    inf
+  Source:                 reset
+                            (input port)
+  Destination:            FIFO5_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[0]/D
+  Path Group:             (none)
+  Path Type:              Max at Slow Process Corner
+  Data Path Delay:        5.195ns  (logic 0.940ns (18.097%)  route 4.255ns (81.903%))
+  Logic Levels:           1  (IBUF=1)
+  Timing Exception:       False Path
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+    K19                                               0.000     0.000 r  reset (IN)
+                         net (fo=0)                   0.000     0.000    reset
+    K19                  IBUF (Prop_ibuf_I_O)         0.940     0.940 r  reset_IBUF_inst/O
+                         net (fo=14, routed)          4.255     5.195    FIFO5_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/src_rst
+    SLICE_X51Y25         FDRE                                         r  FIFO5_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[0]/D
+  -------------------------------------------------------------------    -------------------
+
+Slack:                    inf
+  Source:                 reset
+                            (input port)
+  Destination:            FIFO9_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[0]/D
+  Path Group:             (none)
+  Path Type:              Max at Slow Process Corner
+  Data Path Delay:        4.847ns  (logic 0.940ns (19.393%)  route 3.907ns (80.607%))
+  Logic Levels:           1  (IBUF=1)
+  Timing Exception:       False Path
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+    K19                                               0.000     0.000 r  reset (IN)
+                         net (fo=0)                   0.000     0.000    reset
+    K19                  IBUF (Prop_ibuf_I_O)         0.940     0.940 r  reset_IBUF_inst/O
+                         net (fo=14, routed)          3.907     4.847    FIFO9_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/src_rst
+    SLICE_X46Y16         FDRE                                         r  FIFO9_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[0]/D
+  -------------------------------------------------------------------    -------------------
+
+Slack:                    inf
+  Source:                 reset
+                            (input port)
+  Destination:            FIFO8_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[0]/D
+  Path Group:             (none)
+  Path Type:              Max at Slow Process Corner
+  Data Path Delay:        4.715ns  (logic 0.940ns (19.935%)  route 3.775ns (80.065%))
+  Logic Levels:           1  (IBUF=1)
+  Timing Exception:       False Path
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+    K19                                               0.000     0.000 r  reset (IN)
+                         net (fo=0)                   0.000     0.000    reset
+    K19                  IBUF (Prop_ibuf_I_O)         0.940     0.940 r  reset_IBUF_inst/O
+                         net (fo=14, routed)          3.775     4.715    FIFO8_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/src_rst
+    SLICE_X45Y23         FDRE                                         r  FIFO8_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[0]/D
+  -------------------------------------------------------------------    -------------------
+
+Slack:                    inf
+  Source:                 reset
+                            (input port)
+  Destination:            FIFO11_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[0]/D
+  Path Group:             (none)
+  Path Type:              Max at Slow Process Corner
+  Data Path Delay:        3.462ns  (logic 0.940ns (27.151%)  route 2.522ns (72.849%))
+  Logic Levels:           1  (IBUF=1)
+  Timing Exception:       False Path
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+    K19                                               0.000     0.000 r  reset (IN)
+                         net (fo=0)                   0.000     0.000    reset
+    K19                  IBUF (Prop_ibuf_I_O)         0.940     0.940 r  reset_IBUF_inst/O
+                         net (fo=14, routed)          2.522     3.462    FIFO11_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/src_rst
+    SLICE_X14Y23         FDRE                                         r  FIFO11_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[0]/D
+  -------------------------------------------------------------------    -------------------
+
+Slack:                    inf
+  Source:                 reset
+                            (input port)
+  Destination:            FIFO10_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[0]/D
+  Path Group:             (none)
+  Path Type:              Max at Slow Process Corner
+  Data Path Delay:        3.080ns  (logic 0.940ns (30.521%)  route 2.140ns (69.479%))
+  Logic Levels:           1  (IBUF=1)
+  Timing Exception:       False Path
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+    K19                                               0.000     0.000 r  reset (IN)
+                         net (fo=0)                   0.000     0.000    reset
+    K19                  IBUF (Prop_ibuf_I_O)         0.940     0.940 r  reset_IBUF_inst/O
+                         net (fo=14, routed)          2.140     3.080    FIFO10_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/src_rst
+    SLICE_X13Y18         FDRE                                         r  FIFO10_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[0]/D
+  -------------------------------------------------------------------    -------------------
+
+Slack:                    inf
+  Source:                 reset
+                            (input port)
+  Destination:            FIFO3_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[0]/D
+  Path Group:             (none)
+  Path Type:              Max at Slow Process Corner
+  Data Path Delay:        2.438ns  (logic 0.940ns (38.555%)  route 1.498ns (61.445%))
+  Logic Levels:           1  (IBUF=1)
+  Timing Exception:       False Path
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+    K19                                               0.000     0.000 r  reset (IN)
+                         net (fo=0)                   0.000     0.000    reset
+    K19                  IBUF (Prop_ibuf_I_O)         0.940     0.940 r  reset_IBUF_inst/O
+                         net (fo=14, routed)          1.498     2.438    FIFO3_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/src_rst
+    SLICE_X4Y29          FDRE                                         r  FIFO3_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[0]/D
+  -------------------------------------------------------------------    -------------------
+
+Slack:                    inf
+  Source:                 reset
+                            (input port)
+  Destination:            FIFO1_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[0]/D
+  Path Group:             (none)
+  Path Type:              Max at Slow Process Corner
+  Data Path Delay:        2.414ns  (logic 0.940ns (38.934%)  route 1.474ns (61.066%))
+  Logic Levels:           1  (IBUF=1)
+  Timing Exception:       False Path
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+    K19                                               0.000     0.000 r  reset (IN)
+                         net (fo=0)                   0.000     0.000    reset
+    K19                  IBUF (Prop_ibuf_I_O)         0.940     0.940 r  reset_IBUF_inst/O
+                         net (fo=14, routed)          1.474     2.414    FIFO1_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/src_rst
+    SLICE_X0Y25          FDRE                                         r  FIFO1_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[0]/D
+  -------------------------------------------------------------------    -------------------
+
+
+
+
+
+Min Delay Paths
+--------------------------------------------------------------------------------------
+Slack:                    inf
+  Source:                 reset
+                            (input port)
+  Destination:            FIFO2_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[0]/D
+  Path Group:             (none)
+  Path Type:              Min at Fast Process Corner
+  Data Path Delay:        0.635ns  (logic 0.169ns (26.614%)  route 0.466ns (73.386%))
+  Logic Levels:           1  (IBUF=1)
+  Timing Exception:       False Path
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+    K19                                               0.000     0.000 r  reset (IN)
+                         net (fo=0)                   0.000     0.000    reset
+    K19                  IBUF (Prop_ibuf_I_O)         0.169     0.169 r  reset_IBUF_inst/O
+                         net (fo=14, routed)          0.466     0.635    FIFO2_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/src_rst
+    SLICE_X2Y34          FDRE                                         r  FIFO2_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[0]/D
+  -------------------------------------------------------------------    -------------------
+
+Slack:                    inf
+  Source:                 reset
+                            (input port)
+  Destination:            FIFO3_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[0]/D
+  Path Group:             (none)
+  Path Type:              Min at Fast Process Corner
+  Data Path Delay:        0.778ns  (logic 0.169ns (21.731%)  route 0.609ns (78.269%))
+  Logic Levels:           1  (IBUF=1)
+  Timing Exception:       False Path
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+    K19                                               0.000     0.000 r  reset (IN)
+                         net (fo=0)                   0.000     0.000    reset
+    K19                  IBUF (Prop_ibuf_I_O)         0.169     0.169 r  reset_IBUF_inst/O
+                         net (fo=14, routed)          0.609     0.778    FIFO3_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/src_rst
+    SLICE_X4Y29          FDRE                                         r  FIFO3_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[0]/D
+  -------------------------------------------------------------------    -------------------
+
+Slack:                    inf
+  Source:                 reset
+                            (input port)
+  Destination:            FIFO1_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[0]/D
+  Path Group:             (none)
+  Path Type:              Min at Fast Process Corner
+  Data Path Delay:        0.800ns  (logic 0.169ns (21.154%)  route 0.630ns (78.846%))
+  Logic Levels:           1  (IBUF=1)
+  Timing Exception:       False Path
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+    K19                                               0.000     0.000 r  reset (IN)
+                         net (fo=0)                   0.000     0.000    reset
+    K19                  IBUF (Prop_ibuf_I_O)         0.169     0.169 r  reset_IBUF_inst/O
+                         net (fo=14, routed)          0.630     0.800    FIFO1_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/src_rst
+    SLICE_X0Y25          FDRE                                         r  FIFO1_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[0]/D
+  -------------------------------------------------------------------    -------------------
+
+Slack:                    inf
+  Source:                 reset
+                            (input port)
+  Destination:            FIFO10_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[0]/D
+  Path Group:             (none)
+  Path Type:              Min at Fast Process Corner
+  Data Path Delay:        1.146ns  (logic 0.169ns (14.758%)  route 0.977ns (85.242%))
+  Logic Levels:           1  (IBUF=1)
+  Timing Exception:       False Path
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+    K19                                               0.000     0.000 r  reset (IN)
+                         net (fo=0)                   0.000     0.000    reset
+    K19                  IBUF (Prop_ibuf_I_O)         0.169     0.169 r  reset_IBUF_inst/O
+                         net (fo=14, routed)          0.977     1.146    FIFO10_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/src_rst
+    SLICE_X13Y18         FDRE                                         r  FIFO10_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[0]/D
+  -------------------------------------------------------------------    -------------------
+
+Slack:                    inf
+  Source:                 reset
+                            (input port)
+  Destination:            FIFO11_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[0]/D
+  Path Group:             (none)
+  Path Type:              Min at Fast Process Corner
+  Data Path Delay:        1.311ns  (logic 0.169ns (12.898%)  route 1.142ns (87.102%))
+  Logic Levels:           1  (IBUF=1)
+  Timing Exception:       False Path
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+    K19                                               0.000     0.000 r  reset (IN)
+                         net (fo=0)                   0.000     0.000    reset
+    K19                  IBUF (Prop_ibuf_I_O)         0.169     0.169 r  reset_IBUF_inst/O
+                         net (fo=14, routed)          1.142     1.311    FIFO11_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/src_rst
+    SLICE_X14Y23         FDRE                                         r  FIFO11_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[0]/D
+  -------------------------------------------------------------------    -------------------
+
+Slack:                    inf
+  Source:                 reset
+                            (input port)
+  Destination:            FIFO8_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[0]/D
+  Path Group:             (none)
+  Path Type:              Min at Fast Process Corner
+  Data Path Delay:        1.873ns  (logic 0.169ns (9.032%)  route 1.703ns (90.968%))
+  Logic Levels:           1  (IBUF=1)
+  Timing Exception:       False Path
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+    K19                                               0.000     0.000 r  reset (IN)
+                         net (fo=0)                   0.000     0.000    reset
+    K19                  IBUF (Prop_ibuf_I_O)         0.169     0.169 r  reset_IBUF_inst/O
+                         net (fo=14, routed)          1.703     1.873    FIFO8_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/src_rst
+    SLICE_X45Y23         FDRE                                         r  FIFO8_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[0]/D
+  -------------------------------------------------------------------    -------------------
+
+Slack:                    inf
+  Source:                 reset
+                            (input port)
+  Destination:            FIFO9_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[0]/D
+  Path Group:             (none)
+  Path Type:              Min at Fast Process Corner
+  Data Path Delay:        1.929ns  (logic 0.169ns (8.766%)  route 1.760ns (91.234%))
+  Logic Levels:           1  (IBUF=1)
+  Timing Exception:       False Path
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+    K19                                               0.000     0.000 r  reset (IN)
+                         net (fo=0)                   0.000     0.000    reset
+    K19                  IBUF (Prop_ibuf_I_O)         0.169     0.169 r  reset_IBUF_inst/O
+                         net (fo=14, routed)          1.760     1.929    FIFO9_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/src_rst
+    SLICE_X46Y16         FDRE                                         r  FIFO9_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[0]/D
+  -------------------------------------------------------------------    -------------------
+
+Slack:                    inf
+  Source:                 reset
+                            (input port)
+  Destination:            FIFO5_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[0]/D
+  Path Group:             (none)
+  Path Type:              Min at Fast Process Corner
+  Data Path Delay:        2.162ns  (logic 0.169ns (7.824%)  route 1.993ns (92.176%))
+  Logic Levels:           1  (IBUF=1)
+  Timing Exception:       False Path
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+    K19                                               0.000     0.000 r  reset (IN)
+                         net (fo=0)                   0.000     0.000    reset
+    K19                  IBUF (Prop_ibuf_I_O)         0.169     0.169 r  reset_IBUF_inst/O
+                         net (fo=14, routed)          1.993     2.162    FIFO5_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/src_rst
+    SLICE_X51Y25         FDRE                                         r  FIFO5_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[0]/D
+  -------------------------------------------------------------------    -------------------
+
+Slack:                    inf
+  Source:                 reset
+                            (input port)
+  Destination:            FIFO4_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[0]/D
+  Path Group:             (none)
+  Path Type:              Min at Fast Process Corner
+  Data Path Delay:        2.213ns  (logic 0.169ns (7.643%)  route 2.044ns (92.357%))
+  Logic Levels:           1  (IBUF=1)
+  Timing Exception:       False Path
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+    K19                                               0.000     0.000 r  reset (IN)
+                         net (fo=0)                   0.000     0.000    reset
+    K19                  IBUF (Prop_ibuf_I_O)         0.169     0.169 r  reset_IBUF_inst/O
+                         net (fo=14, routed)          2.044     2.213    FIFO4_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/src_rst
+    SLICE_X52Y21         FDRE                                         r  FIFO4_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[0]/D
+  -------------------------------------------------------------------    -------------------
+
+Slack:                    inf
+  Source:                 reset
+                            (input port)
+  Destination:            FIFO6_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[0]/D
+  Path Group:             (none)
+  Path Type:              Min at Fast Process Corner
+  Data Path Delay:        2.260ns  (logic 0.169ns (7.484%)  route 2.091ns (92.516%))
+  Logic Levels:           1  (IBUF=1)
+  Timing Exception:       False Path
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+    K19                                               0.000     0.000 r  reset (IN)
+                         net (fo=0)                   0.000     0.000    reset
+    K19                  IBUF (Prop_ibuf_I_O)         0.169     0.169 r  reset_IBUF_inst/O
+                         net (fo=14, routed)          2.091     2.260    FIFO6_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/src_rst
+    SLICE_X53Y27         FDRE                                         r  FIFO6_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[0]/D
+  -------------------------------------------------------------------    -------------------
+
+
+
+
+
+--------------------------------------------------------------------------------------
+Path Group:  (none)
+From Clock:  
+  To Clock:  
+
+Max Delay          1636 Endpoints
+Min Delay          1636 Endpoints
+--------------------------------------------------------------------------------------
+
+
+Max Delay Paths
+--------------------------------------------------------------------------------------
+Slack:                    inf
+  Source:                 THRESH_inst/label_reg_reg/C
+                            (rising edge-triggered cell FDRE)
+  Destination:            m_axis_label_tdata
+                            (output port)
+  Path Group:             (none)
+  Path Type:              Max at Slow Process Corner
+  Data Path Delay:        6.133ns  (logic 3.055ns (49.814%)  route 3.078ns (50.186%))
+  Logic Levels:           2  (FDRE=1 OBUF=1)
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+    SLICE_X44Y19         FDRE                         0.000     0.000 r  THRESH_inst/label_reg_reg/C
+    SLICE_X44Y19         FDRE (Prop_fdre_C_Q)         0.456     0.456 r  THRESH_inst/label_reg_reg/Q
+                         net (fo=1, routed)           3.078     3.534    m_axis_label_tdata_OBUF
+    U14                  OBUF (Prop_obuf_I_O)         2.599     6.133 r  m_axis_label_tdata_OBUF_inst/O
+                         net (fo=0)                   0.000     6.133    m_axis_label_tdata
+    U14                                                               r  m_axis_label_tdata (OUT)
+  -------------------------------------------------------------------    -------------------
+
+Slack:                    inf
+  Source:                 THRESH_inst/out_valid_reg/C
+                            (rising edge-triggered cell FDRE)
+  Destination:            m_axis_label_tvalid
+                            (output port)
+  Path Group:             (none)
+  Path Type:              Max at Slow Process Corner
+  Data Path Delay:        6.009ns  (logic 3.112ns (51.779%)  route 2.898ns (48.221%))
+  Logic Levels:           2  (FDRE=1 OBUF=1)
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+    SLICE_X14Y19         FDRE                         0.000     0.000 r  THRESH_inst/out_valid_reg/C
+    SLICE_X14Y19         FDRE (Prop_fdre_C_Q)         0.518     0.518 r  THRESH_inst/out_valid_reg/Q
+                         net (fo=11, routed)          2.898     3.416    m_axis_label_tvalid_OBUF
+    V14                  OBUF (Prop_obuf_I_O)         2.594     6.009 r  m_axis_label_tvalid_OBUF_inst/O
+                         net (fo=0)                   0.000     6.009    m_axis_label_tvalid
+    V14                                                               r  m_axis_label_tvalid (OUT)
+  -------------------------------------------------------------------    -------------------
+
+Slack:                    inf
+  Source:                 FIFO2_inst/inst/gen_fifo.xpm_fifo_axis_inst/xpm_fifo_base_inst/gen_pntr_flags_cc.gen_full_rst_val.ram_full_n_reg/C
+                            (rising edge-triggered cell FDRE)
+  Destination:            s_axis_b_tready
+                            (output port)
+  Path Group:             (none)
+  Path Type:              Max at Slow Process Corner
+  Data Path Delay:        5.616ns  (logic 3.054ns (54.377%)  route 2.562ns (45.623%))
+  Logic Levels:           2  (FDRE=1 OBUF=1)
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+    SLICE_X1Y32          FDRE                         0.000     0.000 r  FIFO2_inst/inst/gen_fifo.xpm_fifo_axis_inst/xpm_fifo_base_inst/gen_pntr_flags_cc.gen_full_rst_val.ram_full_n_reg/C
+    SLICE_X1Y32          FDRE (Prop_fdre_C_Q)         0.456     0.456 r  FIFO2_inst/inst/gen_fifo.xpm_fifo_axis_inst/xpm_fifo_base_inst/gen_pntr_flags_cc.gen_full_rst_val.ram_full_n_reg/Q
+                         net (fo=1, routed)           2.562     3.018    s_axis_b_tready_OBUF
+    U16                  OBUF (Prop_obuf_I_O)         2.598     5.616 r  s_axis_b_tready_OBUF_inst/O
+                         net (fo=0)                   0.000     5.616    s_axis_b_tready
+    U16                                                               r  s_axis_b_tready (OUT)
+  -------------------------------------------------------------------    -------------------
+
+Slack:                    inf
+  Source:                 FIFO1_inst/inst/gen_fifo.xpm_fifo_axis_inst/xpm_fifo_base_inst/gen_pntr_flags_cc.gen_full_rst_val.ram_full_n_reg/C
+                            (rising edge-triggered cell FDRE)
+  Destination:            s_axis_a_tready
+                            (output port)
+  Path Group:             (none)
+  Path Type:              Max at Slow Process Corner
+  Data Path Delay:        5.564ns  (logic 3.053ns (54.870%)  route 2.511ns (45.130%))
+  Logic Levels:           2  (FDRE=1 OBUF=1)
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+    SLICE_X3Y27          FDRE                         0.000     0.000 r  FIFO1_inst/inst/gen_fifo.xpm_fifo_axis_inst/xpm_fifo_base_inst/gen_pntr_flags_cc.gen_full_rst_val.ram_full_n_reg/C
+    SLICE_X3Y27          FDRE (Prop_fdre_C_Q)         0.456     0.456 r  FIFO1_inst/inst/gen_fifo.xpm_fifo_axis_inst/xpm_fifo_base_inst/gen_pntr_flags_cc.gen_full_rst_val.ram_full_n_reg/Q
+                         net (fo=1, routed)           2.511     2.967    s_axis_a_tready_OBUF
+    V13                  OBUF (Prop_obuf_I_O)         2.597     5.564 r  s_axis_a_tready_OBUF_inst/O
+                         net (fo=0)                   0.000     5.564    s_axis_a_tready
+    V13                                                               r  s_axis_a_tready (OUT)
+  -------------------------------------------------------------------    -------------------
+
+Slack:                    inf
+  Source:                 s_axis_drift_tdata[29]
+                            (input port)
+  Destination:            SUB4_inst/result_reg[31]/D
+  Path Group:             (none)
+  Path Type:              Max at Slow Process Corner
+  Data Path Delay:        5.089ns  (logic 1.705ns (33.510%)  route 3.384ns (66.490%))
+  Logic Levels:           3  (CARRY4=1 IBUF=1 LUT2=1)
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+    M1                                                0.000     0.000 r  s_axis_drift_tdata[29] (IN)
+                         net (fo=0)                   0.000     0.000    s_axis_drift_tdata[29]
+    M1                   IBUF (Prop_ibuf_I_O)         0.941     0.941 r  s_axis_drift_tdata_IBUF[29]_inst/O
+                         net (fo=2, routed)           3.384     4.325    SUB4_inst/s_axis_drift_tdata_IBUF[29]
+    SLICE_X59Y29         LUT2 (Prop_lut2_I1_O)        0.124     4.449 r  SUB4_inst/minusOp_carry__6_i_3__0/O
+                         net (fo=1, routed)           0.000     4.449    SUB4_inst/minusOp_carry__6_i_3__0_n_0
+    SLICE_X59Y29         CARRY4 (Prop_carry4_S[1]_O[3])
+                                                      0.640     5.089 r  SUB4_inst/minusOp_carry__6/O[3]
+                         net (fo=1, routed)           0.000     5.089    SUB4_inst/minusOp_carry__6_n_4
+    SLICE_X59Y29         FDRE                                         r  SUB4_inst/result_reg[31]/D
+  -------------------------------------------------------------------    -------------------
+
+Slack:                    inf
+  Source:                 FIFO9_inst/inst/gen_fifo.xpm_fifo_axis_inst/xpm_fifo_base_inst/gen_fwft.gdvld_fwft.data_valid_fwft_reg/C
+                            (rising edge-triggered cell FDRE)
+  Destination:            FIFO9_inst/inst/gen_fifo.xpm_fifo_axis_inst/xpm_fifo_base_inst/gen_sdpram.xpm_memory_base_inst/gen_wr_a.gen_word_narrow.mem_reg/REGCEAREGCE
+  Path Group:             (none)
+  Path Type:              Max at Slow Process Corner
+  Data Path Delay:        5.044ns  (logic 0.828ns (16.417%)  route 4.216ns (83.583%))
+  Logic Levels:           4  (FDRE=1 LUT2=1 LUT3=1 LUT4=1)
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+    SLICE_X48Y17         FDRE                         0.000     0.000 r  FIFO9_inst/inst/gen_fifo.xpm_fifo_axis_inst/xpm_fifo_base_inst/gen_fwft.gdvld_fwft.data_valid_fwft_reg/C
+    SLICE_X48Y17         FDRE (Prop_fdre_C_Q)         0.456     0.456 r  FIFO9_inst/inst/gen_fifo.xpm_fifo_axis_inst/xpm_fifo_base_inst/gen_fwft.gdvld_fwft.data_valid_fwft_reg/Q
+                         net (fo=3, routed)           1.187     1.643    FIFO9_inst/inst/gen_fifo.xpm_fifo_axis_inst/m_axis_tvalid
+    SLICE_X45Y19         LUT2 (Prop_lut2_I0_O)        0.124     1.767 r  FIFO9_inst/inst/gen_fifo.xpm_fifo_axis_inst/xpm_fifo_base_inst_i_1/O
+                         net (fo=12, routed)          1.395     3.162    FIFO9_inst/inst/gen_fifo.xpm_fifo_axis_inst/xpm_fifo_base_inst/rd_en
+    SLICE_X48Y17         LUT3 (Prop_lut3_I2_O)        0.124     3.286 r  FIFO9_inst/inst/gen_fifo.xpm_fifo_axis_inst/xpm_fifo_base_inst/gen_sdpram.xpm_memory_base_inst_i_3/O
+                         net (fo=1, routed)           1.054     4.340    FIFO9_inst/inst/gen_fifo.xpm_fifo_axis_inst/xpm_fifo_base_inst/gen_sdpram.xpm_memory_base_inst/regceb
+    SLICE_X46Y16         LUT4 (Prop_lut4_I3_O)        0.124     4.464 r  FIFO9_inst/inst/gen_fifo.xpm_fifo_axis_inst/xpm_fifo_base_inst/gen_sdpram.xpm_memory_base_inst/gen_wr_a.gen_word_narrow.mem_reg_REGCEAREGCE_cooolgate_en_gate_17/O
+                         net (fo=1, routed)           0.580     5.044    FIFO9_inst/inst/gen_fifo.xpm_fifo_axis_inst/xpm_fifo_base_inst/gen_sdpram.xpm_memory_base_inst/gen_wr_a.gen_word_narrow.mem_reg_REGCEAREGCE_cooolgate_en_sig_12
+    RAMB36_X1Y3          RAMB36E1                                     r  FIFO9_inst/inst/gen_fifo.xpm_fifo_axis_inst/xpm_fifo_base_inst/gen_sdpram.xpm_memory_base_inst/gen_wr_a.gen_word_narrow.mem_reg/REGCEAREGCE
+  -------------------------------------------------------------------    -------------------
+
+Slack:                    inf
+  Source:                 FIFO7_inst/inst/gen_fifo.xpm_fifo_axis_inst/xpm_fifo_base_inst/gen_fwft.gdvld_fwft.data_valid_fwft_reg/C
+                            (rising edge-triggered cell FDRE)
+  Destination:            FIFO7_inst/inst/gen_fifo.xpm_fifo_axis_inst/xpm_fifo_base_inst/gen_pntr_flags_cc.gen_full_rst_val.ram_full_i_reg/D
+  Path Group:             (none)
+  Path Type:              Max at Slow Process Corner
+  Data Path Delay:        5.034ns  (logic 1.014ns (20.145%)  route 4.020ns (79.855%))
+  Logic Levels:           5  (FDRE=1 LUT2=2 LUT4=1 LUT6=1)
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+    SLICE_X54Y19         FDRE                         0.000     0.000 r  FIFO7_inst/inst/gen_fifo.xpm_fifo_axis_inst/xpm_fifo_base_inst/gen_fwft.gdvld_fwft.data_valid_fwft_reg/C
+    SLICE_X54Y19         FDRE (Prop_fdre_C_Q)         0.518     0.518 f  FIFO7_inst/inst/gen_fifo.xpm_fifo_axis_inst/xpm_fifo_base_inst/gen_fwft.gdvld_fwft.data_valid_fwft_reg/Q
+                         net (fo=3, routed)           1.114     1.632    MAX2_inst/m_axis_tvalid
+    SLICE_X53Y17         LUT2 (Prop_lut2_I0_O)        0.124     1.756 f  MAX2_inst/FIFO7_inst_i_1/O
+                         net (fo=33, routed)          0.680     2.436    FIFO7_inst/inst/gen_fifo.xpm_fifo_axis_inst/m_axis_tready
+    SLICE_X53Y18         LUT2 (Prop_lut2_I1_O)        0.124     2.560 f  FIFO7_inst/inst/gen_fifo.xpm_fifo_axis_inst/xpm_fifo_base_inst_i_1/O
+                         net (fo=12, routed)          1.217     3.776    FIFO7_inst/inst/gen_fifo.xpm_fifo_axis_inst/xpm_fifo_base_inst/rdp_inst/rd_en
+    SLICE_X56Y19         LUT4 (Prop_lut4_I2_O)        0.124     3.900 f  FIFO7_inst/inst/gen_fifo.xpm_fifo_axis_inst/xpm_fifo_base_inst/rdp_inst/gen_sdpram.xpm_memory_base_inst_i_2/O
+                         net (fo=16, routed)          1.009     4.910    FIFO7_inst/inst/gen_fifo.xpm_fifo_axis_inst/xpm_fifo_base_inst/rdp_inst/FSM_sequential_gen_fwft.curr_fwft_state_reg[1]
+    SLICE_X54Y20         LUT6 (Prop_lut6_I3_O)        0.124     5.034 r  FIFO7_inst/inst/gen_fifo.xpm_fifo_axis_inst/xpm_fifo_base_inst/rdp_inst/gen_pntr_flags_cc.gen_full_rst_val.ram_full_i_i_1/O
+                         net (fo=1, routed)           0.000     5.034    FIFO7_inst/inst/gen_fifo.xpm_fifo_axis_inst/xpm_fifo_base_inst/rdp_inst_n_7
+    SLICE_X54Y20         FDSE                                         r  FIFO7_inst/inst/gen_fifo.xpm_fifo_axis_inst/xpm_fifo_base_inst/gen_pntr_flags_cc.gen_full_rst_val.ram_full_i_reg/D
+  -------------------------------------------------------------------    -------------------
+
+Slack:                    inf
+  Source:                 s_axis_drift_tdata[29]
+                            (input port)
+  Destination:            SUB4_inst/result_reg[30]/D
+  Path Group:             (none)
+  Path Type:              Max at Slow Process Corner
+  Data Path Delay:        5.029ns  (logic 1.645ns (32.717%)  route 3.384ns (67.283%))
+  Logic Levels:           3  (CARRY4=1 IBUF=1 LUT2=1)
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+    M1                                                0.000     0.000 r  s_axis_drift_tdata[29] (IN)
+                         net (fo=0)                   0.000     0.000    s_axis_drift_tdata[29]
+    M1                   IBUF (Prop_ibuf_I_O)         0.941     0.941 r  s_axis_drift_tdata_IBUF[29]_inst/O
+                         net (fo=2, routed)           3.384     4.325    SUB4_inst/s_axis_drift_tdata_IBUF[29]
+    SLICE_X59Y29         LUT2 (Prop_lut2_I1_O)        0.124     4.449 r  SUB4_inst/minusOp_carry__6_i_3__0/O
+                         net (fo=1, routed)           0.000     4.449    SUB4_inst/minusOp_carry__6_i_3__0_n_0
+    SLICE_X59Y29         CARRY4 (Prop_carry4_S[1]_O[2])
+                                                      0.580     5.029 r  SUB4_inst/minusOp_carry__6/O[2]
+                         net (fo=1, routed)           0.000     5.029    SUB4_inst/minusOp_carry__6_n_5
+    SLICE_X59Y29         FDRE                                         r  SUB4_inst/result_reg[30]/D
+  -------------------------------------------------------------------    -------------------
+
+Slack:                    inf
+  Source:                 FIFO7_inst/inst/gen_fifo.xpm_fifo_axis_inst/xpm_fifo_base_inst/gen_fwft.gdvld_fwft.data_valid_fwft_reg/C
+                            (rising edge-triggered cell FDRE)
+  Destination:            FIFO7_inst/inst/gen_fifo.xpm_fifo_axis_inst/xpm_fifo_base_inst/gen_pntr_flags_cc.gen_full_rst_val.ram_full_n_reg/D
+  Path Group:             (none)
+  Path Type:              Max at Slow Process Corner
+  Data Path Delay:        5.024ns  (logic 1.014ns (20.185%)  route 4.010ns (79.815%))
+  Logic Levels:           5  (FDRE=1 LUT2=2 LUT4=1 LUT6=1)
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+    SLICE_X54Y19         FDRE                         0.000     0.000 r  FIFO7_inst/inst/gen_fifo.xpm_fifo_axis_inst/xpm_fifo_base_inst/gen_fwft.gdvld_fwft.data_valid_fwft_reg/C
+    SLICE_X54Y19         FDRE (Prop_fdre_C_Q)         0.518     0.518 r  FIFO7_inst/inst/gen_fifo.xpm_fifo_axis_inst/xpm_fifo_base_inst/gen_fwft.gdvld_fwft.data_valid_fwft_reg/Q
+                         net (fo=3, routed)           1.114     1.632    MAX2_inst/m_axis_tvalid
+    SLICE_X53Y17         LUT2 (Prop_lut2_I0_O)        0.124     1.756 r  MAX2_inst/FIFO7_inst_i_1/O
+                         net (fo=33, routed)          0.680     2.436    FIFO7_inst/inst/gen_fifo.xpm_fifo_axis_inst/m_axis_tready
+    SLICE_X53Y18         LUT2 (Prop_lut2_I1_O)        0.124     2.560 r  FIFO7_inst/inst/gen_fifo.xpm_fifo_axis_inst/xpm_fifo_base_inst_i_1/O
+                         net (fo=12, routed)          1.217     3.776    FIFO7_inst/inst/gen_fifo.xpm_fifo_axis_inst/xpm_fifo_base_inst/rdp_inst/rd_en
+    SLICE_X56Y19         LUT4 (Prop_lut4_I2_O)        0.124     3.900 r  FIFO7_inst/inst/gen_fifo.xpm_fifo_axis_inst/xpm_fifo_base_inst/rdp_inst/gen_sdpram.xpm_memory_base_inst_i_2/O
+                         net (fo=16, routed)          0.999     4.900    FIFO7_inst/inst/gen_fifo.xpm_fifo_axis_inst/xpm_fifo_base_inst/rdp_inst/FSM_sequential_gen_fwft.curr_fwft_state_reg[1]
+    SLICE_X54Y20         LUT6 (Prop_lut6_I2_O)        0.124     5.024 r  FIFO7_inst/inst/gen_fifo.xpm_fifo_axis_inst/xpm_fifo_base_inst/rdp_inst/gen_pntr_flags_cc.gen_full_rst_val.ram_full_n_i_1/O
+                         net (fo=1, routed)           0.000     5.024    FIFO7_inst/inst/gen_fifo.xpm_fifo_axis_inst/xpm_fifo_base_inst/rdp_inst_n_9
+    SLICE_X54Y20         FDRE                                         r  FIFO7_inst/inst/gen_fifo.xpm_fifo_axis_inst/xpm_fifo_base_inst/gen_pntr_flags_cc.gen_full_rst_val.ram_full_n_reg/D
+  -------------------------------------------------------------------    -------------------
+
+Slack:                    inf
+  Source:                 MAX1_inst/state_reg/C
+                            (rising edge-triggered cell FDRE)
+  Destination:            FIFO6_inst/inst/gen_fifo.xpm_fifo_axis_inst/xpm_fifo_base_inst/rdp_inst/count_value_i_reg[5]/D
+  Path Group:             (none)
+  Path Type:              Max at Slow Process Corner
+  Data Path Delay:        4.976ns  (logic 1.088ns (21.866%)  route 3.888ns (78.134%))
+  Logic Levels:           5  (FDRE=1 LUT2=2 LUT5=1 LUT6=1)
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+    SLICE_X51Y25         FDRE                         0.000     0.000 r  MAX1_inst/state_reg/C
+    SLICE_X51Y25         FDRE (Prop_fdre_C_Q)         0.419     0.419 f  MAX1_inst/state_reg/Q
+                         net (fo=5, routed)           0.838     1.257    MAX1_inst/s_axis_tvalid
+    SLICE_X50Y25         LUT2 (Prop_lut2_I1_O)        0.297     1.554 r  MAX1_inst/FIFO6_inst_i_1/O
+                         net (fo=33, routed)          0.904     2.458    FIFO6_inst/inst/gen_fifo.xpm_fifo_axis_inst/m_axis_tready
+    SLICE_X51Y25         LUT2 (Prop_lut2_I1_O)        0.124     2.582 r  FIFO6_inst/inst/gen_fifo.xpm_fifo_axis_inst/xpm_fifo_base_inst_i_1/O
+                         net (fo=12, routed)          1.150     3.733    FIFO6_inst/inst/gen_fifo.xpm_fifo_axis_inst/xpm_fifo_base_inst/rdp_inst/rd_en
+    SLICE_X48Y28         LUT6 (Prop_lut6_I3_O)        0.124     3.857 r  FIFO6_inst/inst/gen_fifo.xpm_fifo_axis_inst/xpm_fifo_base_inst/rdp_inst/count_value_i[5]_i_2__1/O
+                         net (fo=1, routed)           0.995     4.852    FIFO6_inst/inst/gen_fifo.xpm_fifo_axis_inst/xpm_fifo_base_inst/rdp_inst/count_value_i[5]_i_2__1_n_0
+    SLICE_X48Y27         LUT5 (Prop_lut5_I1_O)        0.124     4.976 r  FIFO6_inst/inst/gen_fifo.xpm_fifo_axis_inst/xpm_fifo_base_inst/rdp_inst/count_value_i[5]_i_1__1/O
+                         net (fo=1, routed)           0.000     4.976    FIFO6_inst/inst/gen_fifo.xpm_fifo_axis_inst/xpm_fifo_base_inst/rdp_inst/count_value_i[5]_i_1__1_n_0
+    SLICE_X48Y27         FDRE                                         r  FIFO6_inst/inst/gen_fifo.xpm_fifo_axis_inst/xpm_fifo_base_inst/rdp_inst/count_value_i_reg[5]/D
+  -------------------------------------------------------------------    -------------------
+
+
+
+
+
+Min Delay Paths
+--------------------------------------------------------------------------------------
+Slack:                    inf
+  Source:                 FIFO10_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[0]/C
+                            (rising edge-triggered cell FDRE)
+  Destination:            FIFO10_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[1]/D
+  Path Group:             (none)
+  Path Type:              Min at Fast Process Corner
+  Data Path Delay:        0.197ns  (logic 0.141ns (71.611%)  route 0.056ns (28.389%))
+  Logic Levels:           1  (FDRE=1)
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+    SLICE_X13Y18         FDRE                         0.000     0.000 r  FIFO10_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[0]/C
+    SLICE_X13Y18         FDRE (Prop_fdre_C_Q)         0.141     0.141 r  FIFO10_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[0]/Q
+                         net (fo=1, routed)           0.056     0.197    FIFO10_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff[0]
+    SLICE_X13Y18         FDRE                                         r  FIFO10_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[1]/D
+  -------------------------------------------------------------------    -------------------
+
+Slack:                    inf
+  Source:                 FIFO5_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[0]/C
+                            (rising edge-triggered cell FDRE)
+  Destination:            FIFO5_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[1]/D
+  Path Group:             (none)
+  Path Type:              Min at Fast Process Corner
+  Data Path Delay:        0.197ns  (logic 0.141ns (71.611%)  route 0.056ns (28.389%))
+  Logic Levels:           1  (FDRE=1)
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+    SLICE_X51Y25         FDRE                         0.000     0.000 r  FIFO5_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[0]/C
+    SLICE_X51Y25         FDRE (Prop_fdre_C_Q)         0.141     0.141 r  FIFO5_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[0]/Q
+                         net (fo=1, routed)           0.056     0.197    FIFO5_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff[0]
+    SLICE_X51Y25         FDRE                                         r  FIFO5_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[1]/D
+  -------------------------------------------------------------------    -------------------
+
+Slack:                    inf
+  Source:                 FIFO6_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[0]/C
+                            (rising edge-triggered cell FDRE)
+  Destination:            FIFO6_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[1]/D
+  Path Group:             (none)
+  Path Type:              Min at Fast Process Corner
+  Data Path Delay:        0.197ns  (logic 0.141ns (71.611%)  route 0.056ns (28.389%))
+  Logic Levels:           1  (FDRE=1)
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+    SLICE_X53Y27         FDRE                         0.000     0.000 r  FIFO6_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[0]/C
+    SLICE_X53Y27         FDRE (Prop_fdre_C_Q)         0.141     0.141 r  FIFO6_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[0]/Q
+                         net (fo=1, routed)           0.056     0.197    FIFO6_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff[0]
+    SLICE_X53Y27         FDRE                                         r  FIFO6_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[1]/D
+  -------------------------------------------------------------------    -------------------
+
+Slack:                    inf
+  Source:                 FIFO7_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[0]/C
+                            (rising edge-triggered cell FDRE)
+  Destination:            FIFO7_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[1]/D
+  Path Group:             (none)
+  Path Type:              Min at Fast Process Corner
+  Data Path Delay:        0.197ns  (logic 0.141ns (71.611%)  route 0.056ns (28.389%))
+  Logic Levels:           1  (FDRE=1)
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+    SLICE_X53Y19         FDRE                         0.000     0.000 r  FIFO7_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[0]/C
+    SLICE_X53Y19         FDRE (Prop_fdre_C_Q)         0.141     0.141 r  FIFO7_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[0]/Q
+                         net (fo=1, routed)           0.056     0.197    FIFO7_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff[0]
+    SLICE_X53Y19         FDRE                                         r  FIFO7_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[1]/D
+  -------------------------------------------------------------------    -------------------
+
+Slack:                    inf
+  Source:                 FIFO8_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[0]/C
+                            (rising edge-triggered cell FDRE)
+  Destination:            FIFO8_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[1]/D
+  Path Group:             (none)
+  Path Type:              Min at Fast Process Corner
+  Data Path Delay:        0.197ns  (logic 0.141ns (71.611%)  route 0.056ns (28.389%))
+  Logic Levels:           1  (FDRE=1)
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+    SLICE_X45Y23         FDRE                         0.000     0.000 r  FIFO8_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[0]/C
+    SLICE_X45Y23         FDRE (Prop_fdre_C_Q)         0.141     0.141 r  FIFO8_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[0]/Q
+                         net (fo=1, routed)           0.056     0.197    FIFO8_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff[0]
+    SLICE_X45Y23         FDRE                                         r  FIFO8_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[1]/D
+  -------------------------------------------------------------------    -------------------
+
+Slack:                    inf
+  Source:                 FIFO1_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[0]/C
+                            (rising edge-triggered cell FDRE)
+  Destination:            FIFO1_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[1]/D
+  Path Group:             (none)
+  Path Type:              Min at Fast Process Corner
+  Data Path Delay:        0.206ns  (logic 0.141ns (68.336%)  route 0.065ns (31.664%))
+  Logic Levels:           1  (FDRE=1)
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+    SLICE_X0Y25          FDRE                         0.000     0.000 r  FIFO1_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[0]/C
+    SLICE_X0Y25          FDRE (Prop_fdre_C_Q)         0.141     0.141 r  FIFO1_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[0]/Q
+                         net (fo=1, routed)           0.065     0.206    FIFO1_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff[0]
+    SLICE_X0Y25          FDRE                                         r  FIFO1_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[1]/D
+  -------------------------------------------------------------------    -------------------
+
+Slack:                    inf
+  Source:                 FIFO3_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[0]/C
+                            (rising edge-triggered cell FDRE)
+  Destination:            FIFO3_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[1]/D
+  Path Group:             (none)
+  Path Type:              Min at Fast Process Corner
+  Data Path Delay:        0.206ns  (logic 0.141ns (68.336%)  route 0.065ns (31.664%))
+  Logic Levels:           1  (FDRE=1)
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+    SLICE_X4Y29          FDRE                         0.000     0.000 r  FIFO3_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[0]/C
+    SLICE_X4Y29          FDRE (Prop_fdre_C_Q)         0.141     0.141 r  FIFO3_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[0]/Q
+                         net (fo=1, routed)           0.065     0.206    FIFO3_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff[0]
+    SLICE_X4Y29          FDRE                                         r  FIFO3_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[1]/D
+  -------------------------------------------------------------------    -------------------
+
+Slack:                    inf
+  Source:                 FIFO11_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[0]/C
+                            (rising edge-triggered cell FDRE)
+  Destination:            FIFO11_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[1]/D
+  Path Group:             (none)
+  Path Type:              Min at Fast Process Corner
+  Data Path Delay:        0.220ns  (logic 0.164ns (74.580%)  route 0.056ns (25.420%))
+  Logic Levels:           1  (FDRE=1)
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+    SLICE_X14Y23         FDRE                         0.000     0.000 r  FIFO11_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[0]/C
+    SLICE_X14Y23         FDRE (Prop_fdre_C_Q)         0.164     0.164 r  FIFO11_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[0]/Q
+                         net (fo=1, routed)           0.056     0.220    FIFO11_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff[0]
+    SLICE_X14Y23         FDRE                                         r  FIFO11_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[1]/D
+  -------------------------------------------------------------------    -------------------
+
+Slack:                    inf
+  Source:                 FIFO2_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[0]/C
+                            (rising edge-triggered cell FDRE)
+  Destination:            FIFO2_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[1]/D
+  Path Group:             (none)
+  Path Type:              Min at Fast Process Corner
+  Data Path Delay:        0.220ns  (logic 0.164ns (74.580%)  route 0.056ns (25.420%))
+  Logic Levels:           1  (FDRE=1)
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+    SLICE_X2Y34          FDRE                         0.000     0.000 r  FIFO2_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[0]/C
+    SLICE_X2Y34          FDRE (Prop_fdre_C_Q)         0.164     0.164 r  FIFO2_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[0]/Q
+                         net (fo=1, routed)           0.056     0.220    FIFO2_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff[0]
+    SLICE_X2Y34          FDRE                                         r  FIFO2_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[1]/D
+  -------------------------------------------------------------------    -------------------
+
+Slack:                    inf
+  Source:                 FIFO4_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[0]/C
+                            (rising edge-triggered cell FDRE)
+  Destination:            FIFO4_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[1]/D
+  Path Group:             (none)
+  Path Type:              Min at Fast Process Corner
+  Data Path Delay:        0.220ns  (logic 0.164ns (74.580%)  route 0.056ns (25.420%))
+  Logic Levels:           1  (FDRE=1)
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+    SLICE_X52Y21         FDRE                         0.000     0.000 r  FIFO4_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[0]/C
+    SLICE_X52Y21         FDRE (Prop_fdre_C_Q)         0.164     0.164 r  FIFO4_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[0]/Q
+                         net (fo=1, routed)           0.056     0.220    FIFO4_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff[0]
+    SLICE_X52Y21         FDRE                                         r  FIFO4_inst/inst/gen_fifo.xpm_fifo_axis_inst/gaxis_rst_sync.xpm_cdc_sync_rst_inst/syncstages_ff_reg[1]/D
+  -------------------------------------------------------------------    -------------------
+
+
+
+
+

@@ -1,0 +1,7 @@
+# compile vhdl design source files
+vhdl xil_defaultlib  \
+"../../../../CUSUM.srcs/sources_1/new/threshold_exceeding_comparator.vhd" \
+"../../../../CUSUM.srcs/sources_1/new/threshold_exceeding_comparator_tb.vhd" \
+
+# Do not sort compile order
+nosort

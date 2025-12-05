@@ -62,20 +62,18 @@ component adder is
   );
 end component;
 --we also need the broadcaster
-component broadcaster is
-  Port (
+COMPONENT axis_broadcaster_0
+  PORT (
     aclk : IN STD_LOGIC;
+    aresetn : IN STD_LOGIC;
     s_axis_tvalid : IN STD_LOGIC;
     s_axis_tready : OUT STD_LOGIC;
     s_axis_tdata : IN STD_LOGIC_VECTOR(31 DOWNTO 0);
-    m_axis_a1_tvalid : OUT STD_LOGIC;
-    m_axis_a1_tready : IN STD_LOGIC;
-    m_axis_a1_tdata : OUT STD_LOGIC_VECTOR(31 DOWNTO 0);
-    m_axis_a2_tvalid : OUT STD_LOGIC;
-    m_axis_a2_tready : IN STD_LOGIC;
-    m_axis_a2_tdata : OUT STD_LOGIC_VECTOR(31 DOWNTO 0)
+    m_axis_tvalid : OUT STD_LOGIC_VECTOR(1 DOWNTO 0);
+    m_axis_tready : IN STD_LOGIC_VECTOR(1 DOWNTO 0);
+    m_axis_tdata : OUT STD_LOGIC_VECTOR(63 DOWNTO 0)
   );
-end component;
+END COMPONENT;
 -- we need 2 zero saturators
 component maximum is
 Port (
@@ -138,11 +136,11 @@ end component;
   signal FIFO11_in : std_logic_vector(31 downto 0) := (others => '0');
 
   -- AXI handshake signals for FIFOs (stream control)
-  signal FIFO1_data_ready,  FIFO1_data_valid  : std_logic := '0';
-  signal FIFO2_data_ready,  FIFO2_data_valid  : std_logic := '0';
-  signal FIFO3_data_ready,  FIFO3_data_valid  : std_logic := '0';
-  signal FIFO4_data_ready,  FIFO4_data_valid  : std_logic := '0';
-  signal FIFO5_data_ready,  FIFO5_data_valid  : std_logic := '0';
+  signal FIFO1_data_valid  : std_logic := '0';  -- only need data_valid for FIFO1
+  signal FIFO2_data_valid  : std_logic := '0';  -- only need data_valid for FIFO2  
+  signal FIFO3_data_valid  : std_logic := '0';  -- only need data_valid for FIFO3
+  signal FIFO4_data_valid  : std_logic := '0';  -- only need data_valid for FIFO4
+  signal FIFO5_data_valid  : std_logic := '0';  -- only need data_valid for FIFO5
   signal FIFO6_data_ready,  FIFO6_data_valid  : std_logic := '0';
   signal FIFO7_data_ready,  FIFO7_data_valid  : std_logic := '0';
   signal FIFO8_data_ready,  FIFO8_data_valid  : std_logic := '0';
@@ -165,6 +163,14 @@ end component;
   signal SUB3_result_ready,  SUB3_result_valid  : std_logic := '0';
   signal SUB4_result_ready,  SUB4_result_valid  : std_logic := '0';
   signal ADDER_result_ready, ADDER_result_valid : std_logic := '0';
+  -- Ready signals for FIFO to Consumer connections  
+  signal FIFO1_to_SUB1_ready : std_logic := '0';  -- ready signal from SUB1 A input to FIFO1
+  signal FIFO2_to_SUB1_ready : std_logic := '0';  -- ready signal from SUB1 B input to FIFO2
+  signal FIFO3_to_BR_ready : std_logic := '0';    -- ready signal from Broadcaster to FIFO3
+  signal FIFO4_to_SUB3_ready : std_logic := '0';  -- ready signal from SUB3 to FIFO4
+  signal FIFO5_to_SUB4_ready : std_logic := '0';  -- ready signal from SUB4 to FIFO5
+  signal DRIFT_to_SUB3_ready : std_logic := '0';  -- ready signal from SUB3 for DRIFT input
+  signal DRIFT_to_SUB4_ready : std_logic := '0';  -- ready signal from SUB4 for DRIFT input
   signal MAX1_in_ready,  MAX1_in_valid  : std_logic := '0';
   signal MAX2_in_ready,  MAX2_in_valid  : std_logic := '0';
   signal MAX1_out_ready, MAX1_out_valid : std_logic := '0';
@@ -204,6 +210,8 @@ end component;
   signal DRIFT_ready : std_logic := '0';
   signal DRIFT_data  : std_logic_vector(31 downto 0) := (others => '0');
 begin
+  -- Combine ready signals: DRIFT is ready when both SUB3 and SUB4 are ready for it
+  DRIFT_ready <= DRIFT_to_SUB3_ready and DRIFT_to_SUB4_ready;
 
 -- Drive active-low reset for AXIS-based FIFOs
     resetn <= not reset;
@@ -219,7 +227,7 @@ begin
         s_axis_tready  => s_axis_a_tready,
         s_axis_tdata   => s_axis_a_tdata,
         m_axis_tvalid  => FIFO1_data_valid,
-        m_axis_tready  => FIFO1_data_ready,
+        m_axis_tready  => FIFO1_to_SUB1_ready,  -- INPUT: ready signal from SUB1 A input
         m_axis_tdata   => FIFO1_out
       );
 
@@ -232,7 +240,7 @@ begin
         s_axis_tready  => s_axis_b_tready,
         s_axis_tdata   => s_axis_b_tdata,
         m_axis_tvalid  => FIFO2_data_valid,
-        m_axis_tready  => FIFO2_data_ready,
+        m_axis_tready  => FIFO2_to_SUB1_ready,  -- INPUT: ready signal from SUB1 B input
         m_axis_tdata   => FIFO2_out
       );
 
@@ -241,10 +249,10 @@ begin
       port map(
         aclk => aclk,
         s_axis_a_tvalid => FIFO1_data_valid,
-        s_axis_a_tready => FIFO1_data_ready,
+        s_axis_a_tready => FIFO1_to_SUB1_ready,  -- OUTPUT: SUB1 drives ready for FIFO1
         s_axis_a_tdata  => FIFO1_out,
         s_axis_b_tvalid => FIFO2_data_valid,
-        s_axis_b_tready => FIFO2_data_ready,
+        s_axis_b_tready => FIFO2_to_SUB1_ready,  -- OUTPUT: SUB1 drives ready for FIFO2
         s_axis_b_tdata  => FIFO2_out,
         m_axis_result_tvalid => SUB1_result_valid,
         m_axis_result_tready => SUB1_result_ready,
@@ -260,24 +268,25 @@ begin
         s_axis_tready  => SUB1_result_ready,
         s_axis_tdata   => SUB1_result,
         m_axis_tvalid  => FIFO3_data_valid,
-        m_axis_tready  => FIFO3_data_ready,
+        m_axis_tready  => FIFO3_to_BR_ready,  -- INPUT: ready signal from Broadcaster
         m_axis_tdata   => FIFO3_out
       );
 
     -- STAGE 2: broadcaster (fans out FIFO3 -> FIFO4 & FIFO5)
     -- broadcaster: takes FIFO3_out and produces two outputs a1 and a2
-    BROAD_inst : broadcaster
+    BROAD_inst : axis_broadcaster_0
       port map(
         aclk => aclk,
-        s_axis_tvalid => FIFO3_data_valid,
-        s_axis_tready => FIFO3_data_ready,
-        s_axis_tdata  => FIFO3_out,
-        m_axis_a1_tvalid => BR_a1_tvalid,
-        m_axis_a1_tready => BR_a1_tready,
-        m_axis_a1_tdata  => BR_a1_tdata,
-        m_axis_a2_tvalid => BR_a2_tvalid,
-        m_axis_a2_tready => BR_a2_tready,
-        m_axis_a2_tdata  => BR_a2_tdata
+        aresetn => resetn,
+        s_axis_tvalid  => FIFO3_data_valid,
+        s_axis_tready => FIFO3_to_BR_ready,  -- OUTPUT: Broadcaster drives ready for FIFO3
+        s_axis_tdata   => FIFO3_out,
+        m_axis_tvalid(0) => BR_a1_tvalid,
+        m_axis_tvalid(1) => BR_a2_tvalid,
+        m_axis_tready(0) => BR_a1_tready,
+        m_axis_tready(1) => BR_a2_tready,
+        m_axis_tdata(31 downto 0)  => BR_a1_tdata,
+        m_axis_tdata(63 downto 32) => BR_a2_tdata
       );
 
     -- STAGE 3: first adder and first subtractor
@@ -321,7 +330,7 @@ begin
         s_axis_tready  => ADDER_result_ready,
         s_axis_tdata   => ADDER_result,
         m_axis_tvalid  => FIFO4_data_valid,
-        m_axis_tready  => FIFO4_data_ready,
+        m_axis_tready  => FIFO4_to_SUB3_ready,  -- INPUT: ready signal from SUB3
         m_axis_tdata   => FIFO4_out
       );
 
@@ -334,7 +343,7 @@ begin
         s_axis_tready  => SUB2_result_ready,
         s_axis_tdata   => SUB2_result,
         m_axis_tvalid  => FIFO5_data_valid,
-        m_axis_tready  => FIFO5_data_ready,
+        m_axis_tready  => FIFO5_to_SUB4_ready,  -- INPUT: ready signal from SUB4
         m_axis_tdata   => FIFO5_out
       );
 
@@ -404,10 +413,10 @@ FIFO11_data_ready <= '1' when (sel = '1' and feedback_seen = '1')
       port map(
         aclk => aclk,
         s_axis_a_tvalid => FIFO4_data_valid,
-        s_axis_a_tready => FIFO4_data_ready,
+        s_axis_a_tready => FIFO4_to_SUB3_ready,  -- OUTPUT: SUB3 drives this ready signal
         s_axis_a_tdata  => FIFO4_out,
         s_axis_b_tvalid => DRIFT_valid,
-        s_axis_b_tready => DRIFT_ready,
+        s_axis_b_tready => DRIFT_to_SUB3_ready,  -- OUTPUT: SUB3 drives its own DRIFT ready signal
         s_axis_b_tdata  => DRIFT_data,
         m_axis_result_tvalid => SUB3_result_valid,
         m_axis_result_tready => SUB3_result_ready,
@@ -419,10 +428,10 @@ FIFO11_data_ready <= '1' when (sel = '1' and feedback_seen = '1')
       port map(
         aclk => aclk,
         s_axis_a_tvalid => FIFO5_data_valid,
-        s_axis_a_tready => FIFO5_data_ready,
+        s_axis_a_tready => FIFO5_to_SUB4_ready,  -- OUTPUT: SUB4 drives this ready signal
         s_axis_a_tdata  => FIFO5_out,
         s_axis_b_tvalid => DRIFT_valid,
-        s_axis_b_tready => DRIFT_ready,
+        s_axis_b_tready => DRIFT_to_SUB4_ready,  -- OUTPUT: SUB4 drives its own DRIFT ready signal
         s_axis_b_tdata  => DRIFT_data,
         m_axis_result_tvalid => SUB4_result_valid,
         m_axis_result_tready => SUB4_result_ready,

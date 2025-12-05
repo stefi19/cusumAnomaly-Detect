@@ -1,0 +1,24 @@
+#-----------------------------------------------------------
+# Vivado v2024.2 (64-bit)
+# SW Build 5239630 on Fri Nov 08 22:35:27 MST 2024
+# IP Build 5239520 on Sun Nov 10 16:12:51 MST 2024
+# SharedData Build 5239561 on Fri Nov 08 14:39:27 MST 2024
+# Start of session at: Fri Dec  5 09:35:12 2025
+# Process ID         : 18884
+# Current directory  : D:/Facultate/Year3/Sem1/SCS/Assignament 5/cusumAnomaly-Detect/VHDL_impl/CUSUM/CUSUM.runs/axis_broadcaster_0_synth_1
+# Command line       : vivado.exe -log axis_broadcaster_0.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source axis_broadcaster_0.tcl
+# Log file           : D:/Facultate/Year3/Sem1/SCS/Assignament 5/cusumAnomaly-Detect/VHDL_impl/CUSUM/CUSUM.runs/axis_broadcaster_0_synth_1/axis_broadcaster_0.vds
+# Journal file       : D:/Facultate/Year3/Sem1/SCS/Assignament 5/cusumAnomaly-Detect/VHDL_impl/CUSUM/CUSUM.runs/axis_broadcaster_0_synth_1\vivado.jou
+# Running On         : Stefi
+# Platform           : Windows Server 2016 or Windows 10
+# Operating System   : 26100
+# Processor Detail   : 12th Gen Intel(R) Core(TM) i7-12700H
+# CPU Frequency      : 2688 MHz
+# CPU Physical cores : 14
+# CPU Logical cores  : 20
+# Host memory        : 16779 MB
+# Swap memory        : 10737 MB
+# Total Virtual      : 27517 MB
+# Available Virtual  : 11834 MB
+#-----------------------------------------------------------
+source axis_broadcaster_0.tcl -notrace
