@@ -1,10 +1,11 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
-use IEEE.STD_LOGIC_SIGNED.ALL;
+use IEEE.NUMERIC_STD.ALL;
 
 entity subtractor is
 	Port (
 		aclk : IN STD_LOGIC;
+		reset : IN STD_LOGIC;
 		s_axis_a_tvalid : IN STD_LOGIC;
 		s_axis_a_tready : OUT STD_LOGIC;
 		s_axis_a_tdata : IN STD_LOGIC_VECTOR(31 DOWNTO 0);
@@ -40,19 +41,24 @@ begin
 	process(aclk)
 	begin
 		if rising_edge(aclk) then
-			case state is
-				when S_READ =>
-					if external_ready = '1' and inputs_valid = '1' then
-						-- perform subtraction
-						result <= s_axis_a_tdata - s_axis_b_tdata;
-						state <= S_WRITE;
-					end if;
+			if reset = '1' then
+				state <= S_READ;
+				result <= (others => '0');
+			else
+				case state is
+					when S_READ =>
+						if external_ready = '1' and inputs_valid = '1' then
+							-- perform signed subtraction (two's complement)
+							result <= std_logic_vector(signed(s_axis_a_tdata) - signed(s_axis_b_tdata));
+							state <= S_WRITE;
+						end if;
 
-				when S_WRITE =>
-					if m_axis_result_tready = '1' then
-						state <= S_READ;
-					end if;
-			end case;
+					when S_WRITE =>
+						if m_axis_result_tready = '1' then
+							state <= S_READ;
+						end if;
+				end case;
+			end if;
 		end if;
 	end process;
 

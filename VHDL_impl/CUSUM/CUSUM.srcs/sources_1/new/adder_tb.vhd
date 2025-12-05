@@ -7,6 +7,7 @@ end adder_tb;
 
 architecture Behavioral of adder_tb is
   signal clk : std_logic := '0';
+  signal reset : std_logic := '1';
 
   signal s_axis_a_tvalid : std_logic := '0';
   signal s_axis_a_tready : std_logic := '0';
@@ -25,6 +26,7 @@ begin
   uut: entity work.adder(Behavioral)
     port map(
       aclk => clk,
+      reset => reset,
       s_axis_a_tvalid => s_axis_a_tvalid,
       s_axis_a_tready => s_axis_a_tready,
       s_axis_a_tdata  => s_axis_a_tdata,
@@ -48,7 +50,10 @@ begin
   stim: process
     variable expected : std_logic_vector(31 downto 0);
   begin
-    -- give DUT time to initialize
+    -- apply reset then give DUT time to initialize
+    reset <= '1';
+    wait for 20 ns;
+    reset <= '0';
     wait for 20 ns;
     m_axis_result_tready <= '1';
 

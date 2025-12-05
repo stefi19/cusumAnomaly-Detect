@@ -31,6 +31,7 @@ use IEEE.NUMERIC_STD.ALL;
 entity maximum is
 Port (
     aclk : IN STD_LOGIC;
+	reset : IN STD_LOGIC;
     s_axis_a_tvalid : IN STD_LOGIC;
     s_axis_a_tready : OUT STD_LOGIC;
     s_axis_a_tdata : IN STD_LOGIC_VECTOR(31 DOWNTO 0);
@@ -62,24 +63,29 @@ begin
 	process(aclk)
 	begin
 		if rising_edge(aclk) then
-			case state is
-				when S_READ =>
-					if external_ready = '1' and inputs_valid = '1' then
-						-- perform comp
-								-- Treat negative when MSB (bit 31) = '1' (explicit sign-bit check)
-								if s_axis_a_tdata(31) = '1' then
-									result <= zero;
-								else
-									result <= s_axis_a_tdata;
-								end if;
-						state <= S_WRITE;
-					end if;
+			if reset = '1' then
+				state <= S_READ;
+				result <= zero;
+			else
+				case state is
+					when S_READ =>
+						if external_ready = '1' and inputs_valid = '1' then
+							-- perform comp
+							-- Treat negative when MSB (bit 31) = '1' (explicit sign-bit check)
+							if s_axis_a_tdata(31) = '1' then
+								result <= zero;
+							else
+								result <= s_axis_a_tdata;
+							end if;
+							state <= S_WRITE;
+						end if;
 
-				when S_WRITE =>
-					if m_axis_result_tready = '1' then
-						state <= S_READ;
-					end if;
-			end case;
+					when S_WRITE =>
+						if m_axis_result_tready = '1' then
+							state <= S_READ;
+						end if;
+				end case;
+			end if;
 		end if;
 	end process;
 

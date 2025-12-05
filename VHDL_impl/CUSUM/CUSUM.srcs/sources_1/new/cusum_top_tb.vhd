@@ -1,5 +1,4 @@
-
-    library IEEE;
+library IEEE;
     use IEEE.STD_LOGIC_1164.ALL;
     use IEEE.NUMERIC_STD.ALL;
     use STD.TEXTIO.ALL;
@@ -32,9 +31,9 @@
       signal aclk : std_logic := '0';
       signal reset : std_logic := '1';
 
-      -- File paths
-      constant INPUT_FILE_NAME  : string := "D:/Facultate/Year3/Sem1/SCS/Assignament 5/cusumAnomaly-Detect/output/Thermistor_binary.csv";
-      constant OUTPUT_FILE_NAME : string := "D:/Facultate/Year3/Sem1/SCS/Assignament 5/cusumAnomaly-Detect/output/cusum_results.csv";
+      -- File paths: use absolute path so simulator can open file reliably
+      constant INPUT_FILE_NAME  : string := "D:/Facultate/Year3/Sem1/SCS/Assignament 5/cusumAnomaly-Detect/VHDL_impl/CUSUM/CUSUM.srcs/sources_1/new/Thermistor_binary.csv";
+      constant OUTPUT_FILE_NAME : string := "D:/Facultate/Year3/Sem1/SCS/Assignament 5/cusumAnomaly-Detect/VHDL_impl/CUSUM/CUSUM.srcs/sources_1/new/cusum_top_results.csv";
 
       -- AXIS signals
       signal s_axis_a_tvalid : std_logic := '0';
@@ -50,14 +49,85 @@
       signal m_axis_label_tdata  : std_logic := '0';
 
       -- CUSUM parameters
-      signal s_axis_drift_tdata     : std_logic_vector(31 downto 0) := x"3D4CCCCD"; -- 0.05
-      signal s_axis_threshold_tdata : std_logic_vector(31 downto 0) := x"40A00000"; -- 5.0
+      -- Default CUSUM parameters (scaled integers: 2.0°C -> 200, 0.5°C -> 50)
+      constant THRESHOLD : integer := 200;
+      constant DRIFT     : integer := 50;
+      signal s_axis_drift_tdata     : std_logic_vector(31 downto 0) := std_logic_vector(to_signed(DRIFT, 32));
+      signal s_axis_threshold_tdata : std_logic_vector(31 downto 0) := std_logic_vector(to_signed(THRESHOLD, 32));
+
+      -- Hardcoded sample inputs (CSV lines 540..599 hardcoded as 32-bit vectors)
+        -- Hardcoded sample inputs (CSV lines 543..600 as requested)
+        constant N_SAMPLES : integer := 58;
+        type sample_array_t is array(0 to N_SAMPLES-1) of std_logic_vector(31 downto 0);
+        constant samples : sample_array_t := (
+          std_logic_vector'("00000000000000000000100110111101"), -- 543
+          std_logic_vector'("00000000000000000000100111010001"), -- 544
+          std_logic_vector'("00000000000000000000100111000111"), -- 545
+          std_logic_vector'("11111111111111111110000011101100"), -- 546
+          std_logic_vector'("11111111111111111110000011101100"), -- 547
+          std_logic_vector'("11111111111111111110000011101100"), -- 548
+          std_logic_vector'("11111111111111111110000011101100"), -- 549
+          std_logic_vector'("11111111111111111110000011101100"), -- 550
+          std_logic_vector'("11111111111111111110000011101100"), -- 551
+          std_logic_vector'("11111111111111111110001000100110"), -- 552
+          std_logic_vector'("11111111111111111110001000100110"), -- 553
+          std_logic_vector'("11111111111111111110001000100110"), -- 554
+          std_logic_vector'("11111111111111111110001000100110"), -- 555
+          std_logic_vector'("11111111111111111110001000100110"), -- 556
+          std_logic_vector'("11111111111111111110001000100110"), -- 557
+          std_logic_vector'("11111111111111111110001000100110"), -- 558
+          std_logic_vector'("11111111111111111110001000100110"), -- 559
+          std_logic_vector'("11111111111111111110001000100110"), -- 560
+          std_logic_vector'("11111111111111111110001100101011"), -- 561
+          std_logic_vector'("11111111111111111110001100101011"), -- 562
+          std_logic_vector'("11111111111111111110001100101011"), -- 563
+          std_logic_vector'("11111111111111111110001100101011"), -- 564
+          std_logic_vector'("11111111111111111110001100101011"), -- 565
+          std_logic_vector'("11111111111111111110001100101011"), -- 566
+          std_logic_vector'("11111111111111111110001100101011"), -- 567
+          std_logic_vector'("11111111111111111110001100101011"), -- 568
+          std_logic_vector'("11111111111111111110001100101011"), -- 569
+          std_logic_vector'("11111111111111111110001100101011"), -- 570
+          std_logic_vector'("11111111111111111110001100101011"), -- 571
+          std_logic_vector'("11111111111111111110001100101011"), -- 572
+          std_logic_vector'("11111111111111111110001100101011"), -- 573
+          std_logic_vector'("11111111111111111110001100101011"), -- 574
+          std_logic_vector'("11111111111111111110001100101011"), -- 575
+          std_logic_vector'("11111111111111111110001100101011"), -- 576
+          std_logic_vector'("11111111111111111110001100101011"), -- 577
+          std_logic_vector'("11111111111111111110001100101011"), -- 578
+          std_logic_vector'("11111111111111111110001100101011"), -- 579
+          std_logic_vector'("11111111111111111110001100101011"), -- 580
+          std_logic_vector'("11111111111111111110001100101011"), -- 581
+          std_logic_vector'("11111111111111111110001100101011"), -- 582
+          std_logic_vector'("11111111111111111110001100101011"), -- 583
+          std_logic_vector'("11111111111111111110001100101011"), -- 584
+          std_logic_vector'("11111111111111111110001100101011"), -- 585
+          std_logic_vector'("11111111111111111110001000100110"), -- 586
+          std_logic_vector'("11111111111111111110001100101011"), -- 587
+          std_logic_vector'("11111111111111111110001100101011"), -- 588
+          std_logic_vector'("11111111111111111110001100101011"), -- 589
+          std_logic_vector'("11111111111111111110001100101011"), -- 590
+          std_logic_vector'("11111111111111111110001100101011"), -- 591
+          std_logic_vector'("11111111111111111110001100101011"), -- 592
+          std_logic_vector'("00000000000000000000101001111101"), -- 593
+          std_logic_vector'("11111111111111111110001100101011"), -- 594
+          std_logic_vector'("00000000000000000000101000110110"), -- 595
+          std_logic_vector'("00000000000000000000101000101100"), -- 596
+          std_logic_vector'("00000000000000000000101000101100"), -- 597
+          std_logic_vector'("00000000000000000000101000100010"), -- 598
+          std_logic_vector'("00000000000000000000101000101100"), -- 599
+          std_logic_vector'("00000000000000000000101000101100")  -- 600
+        );
 
       -- control & counters
       signal end_of_reading : std_logic := '0';
       signal rd_count : integer := 0;
       signal wr_count : integer := 0;
       signal finished : boolean := false;
+
+      -- Output CSV file declared at architecture scope to avoid open/close
+      file results : text open write_mode is OUTPUT_FILE_NAME;
 
     begin
       -- instantiate DUT
@@ -81,7 +151,8 @@
       -- Clock
       clk_proc: process
       begin
-        while now < 100 ms loop
+        -- run clock indefinitely for simulation/debugging
+        loop
           aclk <= '0';
           wait for T/2;
           aclk <= '1';
@@ -99,18 +170,9 @@
         wait;
       end process reset_proc;
 
-      -- Driver: read CSV and feed DUT. CSV format: index, binary32
+      -- Driver: feed hardcoded samples to DUT (handshake-aware)
       driver_proc: process(aclk)
-        file sensor_file : text open read_mode is INPUT_FILE_NAME;
-        variable file_line : line;
-        variable i_char : character;
-        variable comma_seen : boolean;
-        variable bin_str : string(1 to 32);
-        variable ch : character;
-        variable idx : integer;
-        variable cur_sample, prev_sample_var : std_logic_vector(31 downto 0);
-        variable header_skipped : boolean := false;
-        variable file_opened : boolean := false;
+        variable idx : integer range 0 to N_SAMPLES := 0;
       begin
         if rising_edge(aclk) then
           if reset = '1' then
@@ -120,112 +182,82 @@
             s_axis_b_tdata <= (others => '0');
             rd_count <= 0;
             end_of_reading <= '0';
-            prev_sample_var := (others => '0');
-            header_skipped := false;
-            file_opened := false;
+            finished <= false;
+            idx := 0;
           elsif end_of_reading = '0' then
-            if not file_opened then
-              report "Opening CSV: " & INPUT_FILE_NAME;
-              file_opened := true;
-            end if;
+            -- present sample when DUT can accept
+            if idx < N_SAMPLES then
+              -- put current/previous samples on the bus
+              if idx = 0 then
+                s_axis_b_tdata <= (others => '0');
+              else
+                s_axis_b_tdata <= samples(idx-1);
+              end if;
+              s_axis_a_tdata <= samples(idx);
+              s_axis_a_tvalid <= '1';
+              s_axis_b_tvalid <= '1';
 
-            if not endfile(sensor_file) then
-              -- only advance when DUT is ready to accept (handshake)
-              if s_axis_a_tready = '1' then
-                -- read next line
-                readline(sensor_file, file_line);
-                -- skip header
-                if not header_skipped then
-                  header_skipped := true;
-                  -- if header contained text, ignore that line
-                else
-                  -- parse line to find comma and 32-bit binary string after it
-                  comma_seen := false;
-                  idx := 0;
-                  for i in 1 to file_line'length loop
-                    read(file_line, ch);
-                    if ch = ',' then
-                      comma_seen := true;
-                      exit;
-                    end if;
-                  end loop;
-                  -- read next 32 chars as binary string (skip possible spaces)
-                  if comma_seen then
-                    -- consume any spaces
-                    loop
-                      exit when file_line'length = 0;
-                      read(file_line, ch);
-                      exit when ch = '0' or ch = '1';
-                    end loop;
-                    bin_str(1) := ch;
-                    for i in 2 to 32 loop
-                      read(file_line, ch);
-                      bin_str(i) := ch;
-                    end loop;
-
-                    -- convert to std_logic_vector
-                    for i in 1 to 32 loop
-                      if bin_str(i) = '1' then
-                        cur_sample(32-i) := '1';
-                      else
-                        cur_sample(32-i) := '0';
-                      end if;
-                    end loop;
-
-                    -- drive DUT: present cur_sample on A, prev on B
-                    s_axis_a_tdata <= cur_sample;
-                    s_axis_a_tvalid <= '1';
-                    s_axis_b_tdata <= prev_sample_var;
-                    s_axis_b_tvalid <= '1';
-
-                    -- advance prev/sample counters when handshake occurs
-                    if s_axis_a_tvalid = '1' and s_axis_a_tready = '1' then
-                      prev_sample_var := cur_sample;
-                      rd_count <= rd_count + 1;
-                    end if;
-                  else
-                    -- malformed line: ignore
-                    report "Malformed CSV line encountered" severity warning;
-                  end if;
+              -- advance when handshake completes
+              if s_axis_a_tvalid = '1' and s_axis_a_tready = '1' then
+                rd_count <= rd_count + 1;
+                -- report each time a sample is successfully handed to the DUT
+                report "Driver: sent sample index " & integer'image(rd_count) severity note;
+                idx := idx + 1;
+                if idx = N_SAMPLES then
+                  -- finished sending all samples
+                  end_of_reading <= '1';
+                  s_axis_a_tvalid <= '0';
+                  s_axis_b_tvalid <= '0';
+                  finished <= true;
+                  report "Finished sending hardcoded samples. Total samples: " & integer'image(rd_count);
                 end if;
-              end if; -- s_axis_a_tready
-            else
-              -- EOF
-              file_close(sensor_file);
-              end_of_reading <= '1';
-              s_axis_a_tvalid <= '0';
-              s_axis_b_tvalid <= '0';
-              finished <= true;
-              report "Finished reading CSV. Total samples: " & integer'image(rd_count);
+              end if;
             end if;
           end if;
         end if;
       end process driver_proc;
 
-      -- Writer: write labels to output CSV
+      -- Writer: write labels to output CSV (index,label)
       writer_proc: process(aclk)
-        file results : text open write_mode is OUTPUT_FILE_NAME;
+        -- Use architecture-scoped file `results` (opened once at elaboration)
         variable out_line : line;
-        variable idx_var : integer := 0;
+        variable header_written : boolean := false;
+        variable no_label_cycles : integer := 0;
+        variable file_closed_var : boolean := false;
+        constant NOLABEL_TIMEOUT : integer := 200; -- cycles to wait after last label
       begin
         if rising_edge(aclk) then
-          if idx_var = 0 then
+          if not header_written then
             write(out_line, string'("index,label"));
             writeline(results, out_line);
-            idx_var := 1;
+            header_written := true;
           end if;
 
-          if m_axis_label_tvalid = '1' and m_axis_label_tready = '1' then
-            write(out_line, rd_count - 1); -- the label corresponds to previous sample index
-            write(out_line, string'(","));
-            write(out_line, m_axis_label_tdata);
-            writeline(results, out_line);
-            wr_count <= wr_count + 1;
-          end if;
+          if not file_closed_var then
+            if m_axis_label_tvalid = '1' and m_axis_label_tready = '1' then
+              -- reset idle counter when we see labels
+              no_label_cycles := 0;
+              -- only write anomalies (label = '1')
+              if m_axis_label_tdata = '1' then
+                write(out_line, rd_count - 1);
+                write(out_line, string'(","));
+                write(out_line, string'("1"));
+                writeline(results, out_line);
+                wr_count <= wr_count + 1;
+              end if;
+            else
+              -- if we've finished sending samples, start counting idle cycles
+              if finished = true and end_of_reading = '1' then
+                no_label_cycles := no_label_cycles + 1;
+              end if;
+            end if;
 
-          if finished = true and end_of_reading = '1' then
-            file_close(results);
-            report "Results written: " & integer'image(wr_count);
+            -- close file when we've been idle long enough after finishing
+            if finished = true and end_of_reading = '1' and no_label_cycles >= NOLABEL_TIMEOUT then
+              file_close(results);
+              file_closed_var := true;
+              report "Results written (anomalies only): " & integer'image(wr_count);
+            end if;
           end if;
         end if;
       end process writer_proc;

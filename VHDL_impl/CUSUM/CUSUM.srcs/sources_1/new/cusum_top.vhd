@@ -20,7 +20,7 @@ entity cusum_top is
 end cusum_top;
 
 architecture Behavioral of cusum_top is
---we need 13 FIFOs
+--we need 11 FIFOs
 COMPONENT axis_data_fifo_0
   PORT (
     s_axis_aresetn : IN STD_LOGIC;
@@ -36,6 +36,7 @@ END COMPONENT;
 component subtractor is
 	Port (
 		aclk : IN STD_LOGIC;
+		reset : IN STD_LOGIC;
 		s_axis_a_tvalid : IN STD_LOGIC;
 		s_axis_a_tready : OUT STD_LOGIC;
 		s_axis_a_tdata : IN STD_LOGIC_VECTOR(31 DOWNTO 0);
@@ -50,6 +51,7 @@ end component;
 component adder is
   Port (
     aclk : IN STD_LOGIC;
+    reset : IN STD_LOGIC;
     s_axis_a_tvalid : IN STD_LOGIC;
     s_axis_a_tready : OUT STD_LOGIC;
     s_axis_a_tdata : IN STD_LOGIC_VECTOR(31 DOWNTO 0);
@@ -78,6 +80,7 @@ END COMPONENT;
 component maximum is
 Port (
     aclk : IN STD_LOGIC;
+    reset : IN STD_LOGIC;
     s_axis_a_tvalid : IN STD_LOGIC;
     s_axis_a_tready : OUT STD_LOGIC;
     s_axis_a_tdata : IN STD_LOGIC_VECTOR(31 DOWNTO 0);
@@ -90,6 +93,7 @@ end component;
 component threshold_exceeding_comparator is
   Port ( 
     aclk : IN STD_LOGIC;
+    reset : IN STD_LOGIC;
     s_axis_a_tvalid : IN STD_LOGIC;
     s_axis_a_tready : OUT STD_LOGIC;
     s_axis_a_tdata : IN STD_LOGIC_VECTOR(31 DOWNTO 0);
@@ -123,6 +127,9 @@ end component;
   signal FIFO9_out  : std_logic_vector(31 downto 0) := (others => '0');
   signal FIFO10_out : std_logic_vector(31 downto 0) := (others => '0');
   signal FIFO11_out : std_logic_vector(31 downto 0) := (others => '0');
+  -- FIFOs inserted after broadcaster to decouple BROAD -> ADD/SUB
+  signal FIFO_BR1_out : std_logic_vector(31 downto 0) := (others => '0');
+  signal FIFO_BR2_out : std_logic_vector(31 downto 0) := (others => '0');
 
   -- FIFO input data signals (for connecting outputs into next stage)
   signal FIFO3_in  : std_logic_vector(31 downto 0) := (others => '0');
@@ -134,6 +141,12 @@ end component;
   signal FIFO9_in  : std_logic_vector(31 downto 0) := (others => '0');
   signal FIFO10_in : std_logic_vector(31 downto 0) := (others => '0');
   signal FIFO11_in : std_logic_vector(31 downto 0) := (others => '0');
+
+  -- FIFOs after broadcaster handshake signals
+  signal FIFO_BR1_data_valid, FIFO_BR1_data_ready : std_logic := '0';
+  signal FIFO_BR2_data_valid, FIFO_BR2_data_ready : std_logic := '0';
+  signal BR1_to_ADD1_ready : std_logic := '0';
+  signal BR2_to_SUB2_ready : std_logic := '0';
 
   -- AXI handshake signals for FIFOs (stream control)
   signal FIFO1_data_valid  : std_logic := '0';  -- only need data_valid for FIFO1
@@ -180,6 +193,9 @@ end component;
   signal THC_in_ready, THC_in_valid : std_logic := '0';
   signal THC_label : std_logic := '0';
 
+  -- Internal signal to capture comparator label valid (drive port from this)
+  signal label_valid_sig : std_logic := '0';
+
   -- signals for comparator g+ / g- AXIS outputs
   signal TH_gplus_tvalid : std_logic := '0';
   signal TH_gplus_tready : std_logic := '0';
@@ -190,6 +206,8 @@ end component;
 
   -- selection signal for iteration (drives both MUX1 and MUX2)
   signal sel : std_logic := '0';
+  -- report guard for sel flip (avoid repeated reports)
+  signal sel_reported : std_logic := '0';
   -- selection tracking: remember when feedback from FIFOs has been seen
   -- so first iteration uses zeros and subsequent iterations forward FIFO feedback.
   signal feedback_seen : std_logic := '0';
@@ -215,6 +233,13 @@ begin
 
 -- Drive active-low reset for AXIS-based FIFOs
     resetn <= not reset;
+
+  -- Note: do not drive FIFO_*_data_ready or MAX*_out_ready here with constants.
+  -- Those ready signals are outputs from downstream modules (e.g. MAX, comparator)
+  -- and driving them from this architecture with constants can create multiple drivers
+  -- when the instantiated IP also drives the same nets. Let the downstream
+  -- components drive their ready outputs, or drive consumer-ready signals at
+  -- the appropriate place in the design/testbench.
 
     ------------------------------------------------------------------
     -- STAGE 1: ingest inputs via FIFO1/FIFO2 -> SUB1 -> FIFO3
@@ -248,6 +273,7 @@ begin
     SUB1_inst : subtractor
       port map(
         aclk => aclk,
+        reset => reset,
         s_axis_a_tvalid => FIFO1_data_valid,
         s_axis_a_tready => FIFO1_to_SUB1_ready,  -- OUTPUT: SUB1 drives ready for FIFO1
         s_axis_a_tdata  => FIFO1_out,
@@ -289,15 +315,43 @@ begin
         m_axis_tdata(63 downto 32) => BR_a2_tdata
       );
 
+    -- Insert small FIFOs after the broadcaster to decouple BROAD -> ADD/SUB
+    -- FIFO_BR1: buffer broadcaster output a1 before ADD1
+    FIFO_BR1_inst : axis_data_fifo_0
+      port map(
+        s_axis_aresetn => resetn,
+        s_axis_aclk    => aclk,
+        s_axis_tvalid  => BR_a1_tvalid,
+        s_axis_tready  => BR_a1_tready,
+        s_axis_tdata   => BR_a1_tdata,
+        m_axis_tvalid  => FIFO_BR1_data_valid,
+        m_axis_tready  => BR1_to_ADD1_ready,
+        m_axis_tdata   => FIFO_BR1_out
+      );
+
+    -- FIFO_BR2: buffer broadcaster output a2 before SUB2
+    FIFO_BR2_inst : axis_data_fifo_0
+      port map(
+        s_axis_aresetn => resetn,
+        s_axis_aclk    => aclk,
+        s_axis_tvalid  => BR_a2_tvalid,
+        s_axis_tready  => BR_a2_tready,
+        s_axis_tdata   => BR_a2_tdata,
+        m_axis_tvalid  => FIFO_BR2_data_valid,
+        m_axis_tready  => BR2_to_SUB2_ready,
+        m_axis_tdata   => FIFO_BR2_out
+      );
+
     -- STAGE 3: first adder and first subtractor
     -- Broadcaster outputs feed the adder/sub directly (no FIFO between them)
-    -- First adder: input A from broadcaster a1, input B from MUX1 (placeholder)
+    -- First adder: input A from FIFO_BR1 (buffered broadcaster output), input B from MUX1
     ADD1_inst : adder
       port map(
         aclk => aclk,
-        s_axis_a_tvalid => BR_a1_tvalid,
-        s_axis_a_tready => BR_a1_tready,
-        s_axis_a_tdata  => BR_a1_tdata,
+        reset => reset,
+        s_axis_a_tvalid => FIFO_BR1_data_valid,
+        s_axis_a_tready => BR1_to_ADD1_ready,
+        s_axis_a_tdata  => FIFO_BR1_out,
         s_axis_b_tvalid => MUX1_valid,
         s_axis_b_tready => MUX1_ready,
         s_axis_b_tdata  => MUX1_out,
@@ -306,13 +360,14 @@ begin
         m_axis_result_tdata  => ADDER_result
       );
 
-    -- First subtractor: input A from broadcaster a2, input B from MUX2 (placeholder)
+    -- First subtractor: input A from FIFO_BR2 (buffered broadcaster output), input B from MUX2
     SUB2_inst : subtractor
       port map(
         aclk => aclk,
-        s_axis_a_tvalid => BR_a2_tvalid,
-        s_axis_a_tready => BR_a2_tready,
-        s_axis_a_tdata  => BR_a2_tdata,
+        reset => reset,
+        s_axis_a_tvalid => FIFO_BR2_data_valid,
+        s_axis_a_tready => BR2_to_SUB2_ready,
+        s_axis_a_tdata  => FIFO_BR2_out,
         s_axis_b_tvalid => MUX2_valid,
         s_axis_b_tready => MUX2_ready,
         s_axis_b_tdata  => MUX2_out,
@@ -361,29 +416,37 @@ begin
 --  MUX2_valid <= (sel = '1' and feedback_seen = '1' and FIFO11_data_valid = '1') or (sel = '0');
 --  FIFO11_data_ready <= MUX2_ready when (sel = '1' and feedback_seen = '1') else '0';
 -- MUX1 valid (boolean condition converted explicitly to std_logic)
-MUX1_valid <= '1' when (sel = '1' and feedback_seen = '1' and FIFO10_data_valid = '1')
-             else '0';
+-- MUX1 valid: when sel='0' we drive a zero stream (valid), when sel='1' forward FIFO10 when available
+MUX1_valid <= '1' when (sel = '0') else
+             '1' when (sel = '1' and feedback_seen = '1' and FIFO10_data_valid = '1') else
+             '0';
 
 -- MUX1 data path stays unchanged
 MUX1_out <= FIFO10_out when (sel = '1' and feedback_seen = '1' and FIFO10_data_valid = '1')
            else (others => '0');
 
 -- drive FIFO10 ready only when selected, and convert boolean → std_logic
-FIFO10_data_ready <= '1' when (sel = '1' and feedback_seen = '1')
+-- Drive FIFO10 ready from the MUX consumer ready when feedback is selected.
+-- When sel='1' and feedback_seen is set, forward the adder/subtractor ready
+-- (MUX1_ready) to the FIFO so back-pressure is respected. Otherwise deassert.
+FIFO10_data_ready <= MUX1_ready when (sel = '1' and feedback_seen = '1')
                     else '0';
 
 ------------------------------------------------------------------
 
 -- MUX2 valid (boolean → std_logic)
-MUX2_valid <= '1' when (sel = '1' and feedback_seen = '1' and FIFO11_data_valid = '1')
-             else '0';
+-- MUX2 valid: when sel='0' we drive a zero stream (valid), when sel='1' forward FIFO11 when available
+MUX2_valid <= '1' when (sel = '0') else
+             '1' when (sel = '1' and feedback_seen = '1' and FIFO11_data_valid = '1') else
+             '0';
 
 -- MUX2 data path
 MUX2_out <= FIFO11_out when (sel = '1' and feedback_seen = '1' and FIFO11_data_valid = '1')
            else (others => '0');
 
 -- drive FIFO11 ready when selected
-FIFO11_data_ready <= '1' when (sel = '1' and feedback_seen = '1')
+-- Same for FIFO11: drive its ready from MUX2_ready when feedback selected.
+FIFO11_data_ready <= MUX2_ready when (sel = '1' and feedback_seen = '1')
                     else '0';
 
 
@@ -402,6 +465,88 @@ FIFO11_data_ready <= '1' when (sel = '1' and feedback_seen = '1')
     end if;
   end process feedback_latch_proc;
 
+  -- Make the MUX selection follow the feedback latch: start with zeros
+  -- (sel = '0') and switch to feedback when feedback_seen is set.
+  sel <= feedback_seen;
+
+  -- Report when we switch from initial-zero iteration to feedback mode
+  sel_report_proc: process(aclk)
+  begin
+    if rising_edge(aclk) then
+      if reset = '1' then
+        sel_reported <= '0';
+      else
+        if feedback_seen = '1' and sel_reported = '0' then
+          report "cusum_top: sel switched to feedback mode" severity note;
+          sel_reported <= '1';
+        end if;
+      end if;
+    end if;
+  end process sel_report_proc;
+
+  -- Debug trace: report key handshake/assert signals to help locate pipeline stalls.
+  debug_trace_proc: process(aclk)
+  begin
+    if rising_edge(aclk) then
+      if reset = '0' then
+        if FIFO3_data_valid = '1' then
+          report "TRACE: FIFO3_data_valid=1" severity note;
+        end if;
+        if FIFO1_data_valid = '1' then
+          report "VAL: FIFO1_out=" & integer'image(to_integer(signed(FIFO1_out))) severity note;
+        end if;
+        if FIFO2_data_valid = '1' then
+          report "VAL: FIFO2_out=" & integer'image(to_integer(signed(FIFO2_out))) severity note;
+        end if;
+        if SUB1_result_valid = '1' then
+          report "VAL: SUB1_result=" & integer'image(to_integer(signed(SUB1_result))) severity note;
+        end if;
+        if FIFO4_data_valid = '1' then
+          report "VAL: FIFO4_out=" & integer'image(to_integer(signed(FIFO4_out))) severity note;
+        end if;
+        if BR_a1_tvalid = '1' then
+          report "VAL: BR_a1_tdata=" & integer'image(to_integer(signed(BR_a1_tdata))) severity note;
+        end if;
+        if ADDER_result_valid = '1' then
+          report "VAL: ADDER_result=" & integer'image(to_integer(signed(ADDER_result))) severity note;
+        end if;
+        if SUB2_result_valid = '1' then
+          report "VAL: SUB2_result=" & integer'image(to_integer(signed(SUB2_result))) severity note;
+        end if;
+        if FIFO6_data_valid = '1' then
+          report "VAL: FIFO6_out=" & integer'image(to_integer(signed(FIFO6_out))) severity note;
+        end if;
+        if FIFO8_data_valid = '1' then
+          report "VAL: FIFO8_out=" & integer'image(to_integer(signed(FIFO8_out))) severity note;
+        end if;
+        if BR_a1_tvalid = '1' then
+          report "TRACE: BR_a1_tvalid=1" severity note;
+        end if;
+        if FIFO_BR1_data_valid = '1' then
+          report "TRACE: FIFO_BR1_data_valid=1" severity note;
+        end if;
+        if BR1_to_ADD1_ready = '1' then
+          report "TRACE: BR1_to_ADD1_ready=1" severity note;
+        end if;
+        if FIFO4_data_valid = '1' then
+          report "TRACE: FIFO4_data_valid=1" severity note;
+        end if;
+        if FIFO6_data_valid = '1' then
+          report "TRACE: FIFO6_data_valid=1" severity note;
+        end if;
+        if FIFO8_data_valid = '1' then
+          report "TRACE: FIFO8_data_valid=1" severity note;
+        end if;
+        if TH_gplus_tvalid = '1' then
+          report "TRACE: TH_gplus_tvalid=1" severity note;
+        end if;
+        if label_valid_sig = '1' then
+          report "TRACE: label_valid_sig=1" severity note;
+        end if;
+      end if;
+    end if;
+  end process debug_trace_proc;
+
     ------------------------------------------------------------------
     -- STAGE 4: subtract drift from adder/sub outputs (SUB3/SUB4) -> FIFO6/FIFO7 -> MAX1/MAX2 -> FIFO8/FIFO9
     -- Drive DRIFT_data from top-level drift port and keep it always valid
@@ -412,6 +557,7 @@ FIFO11_data_ready <= '1' when (sel = '1' and feedback_seen = '1')
     SUB3_inst : subtractor
       port map(
         aclk => aclk,
+        reset => reset,
         s_axis_a_tvalid => FIFO4_data_valid,
         s_axis_a_tready => FIFO4_to_SUB3_ready,  -- OUTPUT: SUB3 drives this ready signal
         s_axis_a_tdata  => FIFO4_out,
@@ -427,6 +573,7 @@ FIFO11_data_ready <= '1' when (sel = '1' and feedback_seen = '1')
     SUB4_inst : subtractor
       port map(
         aclk => aclk,
+        reset => reset,
         s_axis_a_tvalid => FIFO5_data_valid,
         s_axis_a_tready => FIFO5_to_SUB4_ready,  -- OUTPUT: SUB4 drives this ready signal
         s_axis_a_tdata  => FIFO5_out,
@@ -468,6 +615,7 @@ FIFO11_data_ready <= '1' when (sel = '1' and feedback_seen = '1')
     MAX1_inst : maximum
       port map(
         aclk => aclk,
+        reset => reset,
         s_axis_a_tvalid => FIFO6_data_valid,
         s_axis_a_tready => FIFO6_data_ready,
         s_axis_a_tdata  => FIFO6_out,
@@ -480,6 +628,7 @@ FIFO11_data_ready <= '1' when (sel = '1' and feedback_seen = '1')
     MAX2_inst : maximum
       port map(
         aclk => aclk,
+        reset => reset,
         s_axis_a_tvalid => FIFO7_data_valid,
         s_axis_a_tready => FIFO7_data_ready,
         s_axis_a_tdata  => FIFO7_out,
@@ -519,6 +668,7 @@ FIFO11_data_ready <= '1' when (sel = '1' and feedback_seen = '1')
     THRESH_inst : threshold_exceeding_comparator
       port map(
         aclk => aclk,
+        reset => reset,
         s_axis_a_tvalid => FIFO8_data_valid,
         s_axis_a_tready => FIFO8_data_ready,
         s_axis_a_tdata  => FIFO8_out,
@@ -526,7 +676,7 @@ FIFO11_data_ready <= '1' when (sel = '1' and feedback_seen = '1')
         s_axis_b_tready => FIFO9_data_ready,
         s_axis_b_tdata  => FIFO9_out,
         s_axis_threshold_tdata => s_axis_threshold_tdata,
-        m_axis_result_tvalid => m_axis_label_tvalid,
+        m_axis_result_tvalid => label_valid_sig,
         m_axis_result_tready => m_axis_label_tready,
         m_axis_result_tdata  => m_axis_label_tdata,
         m_axis_gplus_tvalid  => TH_gplus_tvalid,
@@ -536,6 +686,9 @@ FIFO11_data_ready <= '1' when (sel = '1' and feedback_seen = '1')
         m_axis_gminus_tready => TH_gminus_tready,
         m_axis_gminus_tdata  => TH_gminus_tdata
       );
+
+    -- Drive the top-level output port from the internal label valid signal
+    m_axis_label_tvalid <= label_valid_sig;
 
     -- FIFO10: buffer comparator g+ output
     FIFO10_inst : axis_data_fifo_0
@@ -567,7 +720,5 @@ FIFO11_data_ready <= '1' when (sel = '1' and feedback_seen = '1')
 
 --fifo 1 - input a from top module ports fifo 2 - input b from top module ports first sub - inputs from the outputs of fifo1 and fifo2 fifo3 - input is output of the first sub broadcaster - input is output of fifo3 first adder - input from output of broadcaster, and input from output of MUX1 first sub - input from output of broadcaster, and input from output of MUX2 fifo4 - input is output of the first adder fifo5 - input is output of the first sub second sub - input is output of fifo4 and the other input is drift from top module ports third sub - input is output of fifo5 and the other input is drift from top module ports fifo6 - input is output of the second sub fifo7 - input is output of the third sub maximum1 - input is the output of fifo6 maximum2 - input is the output of fifo7 fifo8 - input is output of maximum1 fifo9 - input is output of maximum2 thresholdcomp - input is output of fifo8, input is output of fifo9, input is threshold from top module ports, output is label result out from top module port fifo10 - input is output of thresholdcomp (g+) fifo11 - input is output of thresholdcomp(g-) (so actually we just need 11 fifos) MUX1 - input from fifo10 and the other input is 0, the selection is a signal sel MUX2 - input from fifo11 and the other input is 0, the selection is the same signal sel sel will tell if it's the first iteration or not
 
-
-
-
 end Behavioral;
+

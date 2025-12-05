@@ -7,6 +7,7 @@ end threshold_exceeding_comparator_tb;
 
 architecture Behavioral of threshold_exceeding_comparator_tb is
   signal clk : std_logic := '0';
+  signal reset : std_logic := '1';
 
   -- inputs
   signal s_axis_a_tvalid : std_logic := '0';
@@ -38,6 +39,7 @@ begin
   DUT: entity work.threshold_exceeding_comparator
     port map(
       aclk => clk,
+      reset => reset,
       s_axis_a_tvalid => s_axis_a_tvalid,
       s_axis_a_tready => s_axis_a_tready,
       s_axis_a_tdata  => s_axis_a_tdata,
@@ -67,7 +69,10 @@ begin
 
   stim: process
   begin
-    -- wait for a few cycles
+    -- apply reset then wait for a few cycles
+    reset <= '1';
+    wait for 20 ns;
+    reset <= '0';
     wait for 20 ns;
 
     -- TEST 1: neither exceed (a=5, b=3, thresh=10) -> flag=0, gplus=5, gminus=3

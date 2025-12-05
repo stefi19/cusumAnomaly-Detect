@@ -9,6 +9,7 @@ architecture tb of maximum_tb is
   constant CLK_PERIOD : time := 20 ns;
 
   signal aclk : std_logic := '0';
+  signal reset : std_logic := '1';
 
   -- DUT signals
   signal s_axis_a_tvalid : std_logic := '0';
@@ -27,6 +28,7 @@ begin
   UUT: entity work.maximum
     port map(
       aclk => aclk,
+      reset => reset,
       s_axis_a_tvalid => s_axis_a_tvalid,
       s_axis_a_tready => s_axis_a_tready,
       s_axis_a_tdata  => s_axis_a_tdata,
@@ -53,7 +55,11 @@ begin
     );
 
   begin
-    wait for 50 ns; -- allow time to settle
+    -- apply reset then allow time to settle
+    reset <= '1';
+    wait for 20 ns;
+    reset <= '0';
+    wait for 30 ns; -- total 50 ns before starting tests
 
     for idx in tests'range loop
       s_axis_a_tdata <= tests(idx).indata;

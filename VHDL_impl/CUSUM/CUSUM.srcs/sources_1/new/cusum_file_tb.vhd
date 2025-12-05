@@ -36,10 +36,9 @@ architecture tb of cusum_file_tb is
   signal aclk : std_logic := '0';
   signal reset : std_logic := '1';
 
-  -- File paths (adjust these to your actual file locations)
-  -- Input file should contain binary values in CSV format
-  constant INPUT_FILE_NAME  : string := "D:/Facultate/Year3/Sem1/SCS/Assignament 5/cusumAnomaly-Detect/output/Thermistor_binary.csv";
-  constant OUTPUT_FILE_NAME : string := "D:/Facultate/Year3/Sem1/SCS/Assignament 5/cusumAnomaly-Detect/output/cusum_results.csv";
+  -- File paths: use absolute path so simulator can open file reliably
+  constant INPUT_FILE_NAME  : string := "D:/Facultate/Year3/Sem1/SCS/Assignament 5/cusumAnomaly-Detect/VHDL_impl/CUSUM/CUSUM.srcs/sources_1/new/Thermistor_binary.csv";
+  constant OUTPUT_FILE_NAME : string := "D:/Facultate/Year3/Sem1/SCS/Assignament 5/cusumAnomaly-Detect/VHDL_impl/CUSUM/CUSUM.srcs/sources_1/new/cusum_results.csv";
 
   -- Input stream A (current sample)
   signal s_axis_a_tvalid : std_logic := '0';
@@ -115,8 +114,10 @@ begin
         header_skipped := false;
         
       elsif end_of_reading = '0' then
-        -- Check if both inputs are ready
-        if s_axis_a_tready = '1' and s_axis_b_tready = '1' and not endfile(sensor_file) then
+        -- Check if input A is ready; read when DUT can accept a new sample.
+        -- (Don't wait for both A and B ready to avoid potential deadlock/backpressure stalls.)
+        -- Only call endfile/readline if the file was successfully opened by the simulator
+        if s_axis_a_tready = '1' and not endfile(sensor_file) then
           -- Read next line from file
           readline(sensor_file, file_line);
           
@@ -125,6 +126,7 @@ begin
             header_skipped := true;
             s_axis_a_tvalid <= '0';
             s_axis_b_tvalid <= '0';
+            report "cusum_file_tb: skipped header" severity note;
           elsif file_line'length > 0 then
             -- Find comma position to skip index column
             comma_pos := 0;
@@ -164,7 +166,7 @@ begin
                   rd_count <= rd_count + 1;
                   s_axis_a_tvalid <= '0';
                   s_axis_b_tvalid <= '0';
-                  
+                  report "cusum_file_tb: stored first sample (index " & integer'image(rd_count) & ") value=" & integer'image(to_integer(unsigned(current_sample))) severity note;
                 else
                   -- Send current sample on A and previous sample on B
                   s_axis_a_tdata <= current_sample;
@@ -175,6 +177,7 @@ begin
                   -- Update previous sample for next iteration
                   prev_sample <= current_sample;
                   rd_count <= rd_count + 1;
+                  report "cusum_file_tb: sent sample (index " & integer'image(rd_count) & ") value=" & integer'image(to_integer(unsigned(current_sample))) severity note;
                 end if;
               else
                 -- Read failed, deassert valid
@@ -194,6 +197,7 @@ begin
           
         elsif endfile(sensor_file) then
           -- End of file reached
+          report "cusum_file_tb: EOF reached after " & integer'image(rd_count) & " samples" severity note;
           file_close(sensor_file);
           end_of_reading <= '1';
           s_axis_a_tvalid <= '0';

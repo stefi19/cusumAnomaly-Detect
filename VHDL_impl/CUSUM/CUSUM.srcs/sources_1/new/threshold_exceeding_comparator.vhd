@@ -5,6 +5,7 @@ use IEEE.NUMERIC_STD.ALL;
 entity threshold_exceeding_comparator is
     Port ( 
         aclk : IN STD_LOGIC;
+        reset : IN STD_LOGIC;
 
         -- Input streams: g+ (A) and g- (B)
         s_axis_a_tvalid : IN STD_LOGIC;
@@ -75,44 +76,63 @@ begin
     process(aclk)
     begin
         if rising_edge(aclk) then
-
-            -- capture inputs when valid and internal buffer free
-            if s_axis_a_tvalid = '1' and gp_ready_buf = '1' then
-                gP_reg <= s_axis_a_tdata;
-                gP_valid_i <= '1';
-            end if;
-
-            if s_axis_b_tvalid = '1' and gm_ready_buf = '1' then
-                gM_reg <= s_axis_b_tdata;
-                gM_valid_i <= '1';
-            end if;
-
-            -- threshold register: always sample current threshold input
-            threshold_reg <= s_axis_threshold_tdata;
-
-            -- When both inputs and threshold are available and output not busy, compute
-            if gP_valid_i = '1' and gM_valid_i = '1' and out_valid = '0' then
-                -- Always forward inputs to outputs; only set label when threshold is exceeded
-                gpp_reg <= gP_reg;
-                gmp_reg <= gM_reg;
-                if (unsigned(gP_reg) > unsigned(threshold_reg)) or (unsigned(gM_reg) > unsigned(threshold_reg)) then
-                    label_reg <= '1';
-                else
-                    label_reg <= '0';
-                end if;
-
-                out_valid <= '1';
-
-                -- consume inputs
+            if reset = '1' then
+                -- synchronous reset: clear all registers and flags
+                gP_reg <= (others => '0');
+                gM_reg <= (others => '0');
+                threshold_reg <= (others => '0');
+                gpp_reg <= (others => '0');
+                gmp_reg <= (others => '0');
+                label_reg <= '0';
+                out_valid <= '0';
                 gP_valid_i <= '0';
                 gM_valid_i <= '0';
-            end if;
+            else
 
-            -- clear output when downstream ready
-            if out_valid = '1' and m_axis_gplus_tready = '1' and m_axis_gminus_tready = '1' and m_axis_result_tready = '1' then
-                out_valid <= '0';
-            end if;
+                -- capture inputs when valid and internal buffer free
+                if s_axis_a_tvalid = '1' and gp_ready_buf = '1' then
+                    gP_reg <= s_axis_a_tdata;
+                    report "THR_COMP: captured gP_reg = " & integer'image(to_integer(signed(s_axis_a_tdata))) severity note;
+                    gP_valid_i <= '1';
+                end if;
 
+                if s_axis_b_tvalid = '1' and gm_ready_buf = '1' then
+                    gM_reg <= s_axis_b_tdata;
+                    report "THR_COMP: captured gM_reg = " & integer'image(to_integer(signed(s_axis_b_tdata))) severity note;
+                    gM_valid_i <= '1';
+                end if;
+
+                -- threshold register: always sample current threshold input
+                threshold_reg <= s_axis_threshold_tdata;
+
+                -- When both inputs and threshold are available and output not busy, compute
+                if gP_valid_i = '1' and gM_valid_i = '1' and out_valid = '0' then
+                    -- Always forward inputs to outputs; only set label when threshold is exceeded
+                    gpp_reg <= gP_reg;
+                    gmp_reg <= gM_reg;
+                    if (signed(gP_reg) > signed(threshold_reg)) or (signed(gM_reg) > signed(threshold_reg)) then
+                        label_reg <= '1';
+                    else
+                        label_reg <= '0';
+                    end if;
+                    report "THR_COMP: compare gP=" & integer'image(to_integer(signed(gP_reg))) &
+                           ", gM=" & integer'image(to_integer(signed(gM_reg))) &
+                           ", thr=" & integer'image(to_integer(signed(threshold_reg))) &
+                           ", label=" & STD_LOGIC'image(label_reg) severity note;
+
+                    out_valid <= '1';
+
+                    -- consume inputs
+                    gP_valid_i <= '0';
+                    gM_valid_i <= '0';
+                end if;
+
+                -- clear output when downstream ready
+                if out_valid = '1' and m_axis_gplus_tready = '1' and m_axis_gminus_tready = '1' and m_axis_result_tready = '1' then
+                    out_valid <= '0';
+                end if;
+
+            end if;
         end if;
     end process;
 
