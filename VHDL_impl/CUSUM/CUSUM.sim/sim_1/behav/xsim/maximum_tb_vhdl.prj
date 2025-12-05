@@ -1,0 +1,7 @@
+# compile vhdl design source files
+vhdl xil_defaultlib  \
+"../../../../CUSUM.srcs/sources_1/new/maximum.vhd" \
+"../../../../CUSUM.srcs/sources_1/new/maximum_tb.vhd" \
+
+# Do not sort compile order
+nosort

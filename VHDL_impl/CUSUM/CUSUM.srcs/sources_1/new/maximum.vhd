@@ -21,10 +21,7 @@
 
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
-
--- Uncomment the following library declaration if using
--- arithmetic functions with Signed or Unsigned values
---use IEEE.NUMERIC_STD.ALL;
+use IEEE.NUMERIC_STD.ALL;
 
 -- Uncomment the following library declaration if instantiating
 -- any Xilinx leaf cells in this code.
@@ -69,11 +66,12 @@ begin
 				when S_READ =>
 					if external_ready = '1' and inputs_valid = '1' then
 						-- perform comp
-						if s_axis_a_tdata < zero then
-						    result<=zero;
-						else
-						    result<=s_axis_a_tdata;
-						end if;
+								-- Treat negative when MSB (bit 31) = '1' (explicit sign-bit check)
+								if s_axis_a_tdata(31) = '1' then
+									result <= zero;
+								else
+									result <= s_axis_a_tdata;
+								end if;
 						state <= S_WRITE;
 					end if;
 
